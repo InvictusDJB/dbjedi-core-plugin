@@ -4,6 +4,7 @@ namespace DJB;
 
 class WordPress {
 	public static function init() {
+		self::register_taxonomies();
 		self::register_post_types();
 
 		add_action('admin_menu', array( 'DJB\Admin', 'admin_menu' ));
@@ -34,4 +35,8 @@ class WordPress {
 		Admin\Ranks::register_post_type();
 		Admin\Species::register_post_type();
 	}//end register_custom_post_types
+
+	public static function register_taxonomies() {
+		Admin\Taxonomy\Path::register();
+	}//end register_taxonomies
 }//end class DJB\WordPress
