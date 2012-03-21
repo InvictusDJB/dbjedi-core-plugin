@@ -3,7 +3,7 @@
 namespace DJB\Importer;
 
 class Ranks extends \DJB\Importer {
-	public $post_type = 'ranks';
+	public $post_type = 'djb-rank';
 	public $page_title = 'Ranks';
 
 	public function data() {

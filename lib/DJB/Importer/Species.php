@@ -3,7 +3,7 @@
 namespace DJB\Importer;
 
 class Species extends \DJB\Importer {
-	public $post_type = 'species';
+	public $post_type = 'djb-species';
 	public $page_title = 'Species';
 
 	public function data() {

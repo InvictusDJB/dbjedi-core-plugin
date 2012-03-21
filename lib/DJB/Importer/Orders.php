@@ -3,40 +3,64 @@
 namespace DJB\Importer;
 
 class Orders extends \DJB\Importer {
-	public $post_type = 'orders';
+	public $post_type = 'djb-order';
 	public $page_title = 'Orders';
 
 	public function data() {
 		$data = array(
 			array(
 				'post_title' => 'Krath',
-				'path' => 'Dark',
 				'legacy_id' => 'Krath',
+				'tax_input' => array(
+					'djb-path' => array(
+						'Dark',
+					),
+				),
 			),
 			array(
 				'post_title' => 'Obelisk',
-				'path' => 'Dark',
 				'legacy_id' => 'Obelisk',
+				'tax_input' => array(
+					'djb-path' => array(
+						'Dark',
+					),
+				),
 			),
 			array(
 				'post_title' => 'Sith',
-				'path' => 'Dark',
 				'legacy_id' => 'Sith',
+				'tax_input' => array(
+					'djb-path' => array(
+						'Dark',
+					),
+				),
 			),
 			array(
 				'post_title' => 'Consular',
-				'path' => 'Light',
 				'legacy_id' => 'Sith',
+				'tax_input' => array(
+					'djb-path' => array(
+						'Light',
+					),
+				),
 			),
 			array(
 				'post_title' => 'Guardian',
-				'path' => 'Light',
 				'legacy_id' => 'Obelisk',
+				'tax_input' => array(
+					'djb-path' => array(
+						'Light',
+					),
+				),
 			),
 			array(
 				'post_title' => 'Sentinel',
-				'path' => 'Light',
 				'legacy_id' => 'Krath',
+				'tax_input' => array(
+					'djb-path' => array(
+						'Light',
+					),
+				),
 			),
 		);
 		return $data;

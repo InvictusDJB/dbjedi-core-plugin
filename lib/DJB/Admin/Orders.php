@@ -3,7 +3,7 @@
 namespace DJB\Admin;
 
 class Orders {
-	static $post_type = 'orders';
+	static $post_type = 'djb-order';
 	static $class = 'DJB\Admin\Orders';
 
 	public static function register_post_type() {
@@ -40,9 +40,14 @@ class Orders {
 				'title',
 				'custom-fields',
 			),
+			'taxonomies' => array(
+				'djb-path',
+			),
 		);
 
 		register_post_type( static::$post_type, $args );
+
+		register_taxonomy_for_object_type( 'djb-path', static::$post_type );
 
 		add_filter('manage_edit-' . static::$post_type . '_columns', array( static::$class, 'wp_admin_columns' ) );
 		add_filter('manage_' . static::$post_type . '_posts_custom_column', array( static::$class, 'wp_admin_custom_column' ), 10, 2 );
@@ -63,7 +68,14 @@ class Orders {
 	public static function wp_admin_custom_column( $column, $post_id ) {
 		switch( $column ) {
 			case 'path':
-				echo get_post_meta( $post_id, 'path', true );
+				$terms = wp_get_post_terms( $post_id, 'djb-path' );
+
+				$out = '';
+				foreach( $terms as $term ) {
+					$out .= "{$term->name}, ";
+				}//end foreach
+
+				echo substr( $out, 0, -2 );
 				break;
 		}//end switch
 	}//end wp_admin_columns

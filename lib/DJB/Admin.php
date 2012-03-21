@@ -11,13 +11,13 @@ class Admin {
 		add_menu_page( 'DJB Importer', 'DJB Importer', 'manage_options', 'djb-data-importer', array( 'DJB\Admin', 'importer' ) );
 
 		$importers = array(
-			'orders' => 'Orders',
-			'species' => 'Species',
-			'ranks' => 'Ranks',
+			'djb-order' => 'Orders',
+			'djb-species' => 'Species',
+			'djb-rank' => 'Ranks',
 		);
 
 		foreach( $importers as $slug => $name ) {
-			add_submenu_page( 'djb-data-importer', $name, $name, 'manage_options', 'djb-data-importer-' . $slug, array( 'DJB\Admin', 'importer_' . $slug) );
+			add_submenu_page( 'djb-data-importer', $name, $name, 'manage_options', 'djb-data-importer-' . $slug, array( 'DJB\Admin', 'importer_' . str_replace( '-', '_', $slug ) ) );
 		}//end foreach
 	}//end admin_menu
 
@@ -27,19 +27,19 @@ class Admin {
 	public static function importer() {
 	}//end importer
 
-	public static function importer_orders() {
+	public static function importer_djb_order() {
 		$importer = new Importer\Orders;
 
 		$importer->page();
 	}//end importer_orders
 
-	public static function importer_ranks() {
+	public static function importer_djb_rank() {
 		$importer = new Importer\Ranks;
 
 		$importer->page();
 	}//end importer_ranks
 
-	public static function importer_species() {
+	public static function importer_djb_species() {
 		$importer = new Importer\Species;
 
 		$importer->page();

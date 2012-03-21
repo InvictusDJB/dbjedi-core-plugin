@@ -3,7 +3,7 @@
 namespace DJB\Admin;
 
 class Species {
-	static $post_type = 'species';
+	static $post_type = 'djb-species';
 	static $class = 'DJB\Admin\Species';
 
 	public static function register_post_type() {

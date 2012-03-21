@@ -3,7 +3,7 @@
 namespace DJB\Admin;
 
 class Ranks {
-	static $post_type = 'ranks';
+	static $post_type = 'djb-rank';
 	static $class = 'DJB\Admin\Ranks';
 
 	public static function register_post_type() {
@@ -39,6 +39,9 @@ class Ranks {
 			'supports' => array(
 				'title',
 				'custom-fields',
+			),
+			'taxonomies' => array(
+				'djb-order',
 			),
 		);
 
