@@ -6,6 +6,12 @@ class Ranks {
 	static $post_type = 'djb-rank';
 	static $class = 'DJB\Admin\Ranks';
 
+	public static function order( $order_id ) {
+		$order = \DJB\Core\Order::get( $order_id );
+
+		return $order ? $order->post_title: 'All';
+	}//end order
+
 	public static function register_post_type() {
 		$labels = array(
 			'name' => _x('Ranks', 'post type general name'),
@@ -59,7 +65,7 @@ class Ranks {
 		$columns['cb'] = '<input type="checkbox" />';
 		$columns['title'] = _x('Ranks', 'column name');
 		$columns['abbr'] = __('Abbreviation');
-		$columns['the_order'] = __('Order');
+		$columns['order_id'] = __('Order');
 		$columns['sort_order'] = __('Sort Order');
 
 		return $columns;
@@ -70,8 +76,8 @@ class Ranks {
 			case 'abbr':
 				echo get_post_meta( $post_id, 'abbr', true );
 				break;
-			case 'the_order':
-				echo get_post_meta( $post_id, 'the_order', true );
+			case 'order_id':
+				echo self::order( get_post_meta( $post_id, 'order_id', true ) );
 				break;
 			case 'sort_order':
 				echo get_post_meta( $post_id, 'sort_order', true );
