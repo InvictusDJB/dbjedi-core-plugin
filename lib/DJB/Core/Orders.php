@@ -3,11 +3,10 @@
 namespace DJB\Core;
 
 class Orders extends \DJB\Collection {
-	static $child = '\DJB\Core\Order';
-	static $post_type = 'djb-order';
+	public static $child = '\DJB\Core\Order';
 
 	public function get( $args = array() ) {
-		$args['post_type'] = static::$post_type;
+		$args['post_type'] = $this->post_type();
 
 		$defaults = array(
 			'orderby' => 'post_title',
