@@ -11,7 +11,7 @@ class Ranks extends \DJB\Importer {
 			SELECT name post_title,
 						 abbr,
 						 sort_order,
-						 ordr the_order,
+						 ordr order_id,
 						 saberpoints saber_points,
 						 handtohandpoints hand_to_hand_points,
 						 forcepoints force_points,
@@ -22,7 +22,19 @@ class Ranks extends \DJB\Importer {
 			 ORDER BY sort_order
 		";
 
-		$data = \DJB::db('olddjb')->GetAll( $sql );
+		if( $data = \DJB::db('olddjb')->GetAll( $sql ) ) {
+			foreach( $data as &$row ) {
+				$slug = str_replace(' ', '-', strtolower( trim( $row['order_id'] ) ) );
+
+				if( 'all' == $slug ) {
+					unset( $row['order_id'] );
+				} elseif( $order = \DJB\Core\Order::get( $slug ) ) {
+					$row['order_id'] = $order->ID;
+				} else {
+					unset( $row['order_id'] );
+				}//end else
+			}//end foreach
+		}//end if
 		return $data;
 	}//end data
 }//end Ranks
