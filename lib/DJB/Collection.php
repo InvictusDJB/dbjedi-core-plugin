@@ -10,18 +10,18 @@ abstract class Collection implements \ArrayAccess, \IteratorAggregate, \Countabl
    * Class name of the collection child objects, used
    * for instantiation. Redefine when extending Collection.
    */
-  static $child = 'stdClass';
+  public static $child = 'stdClass';
 
   /** 
    * If set, children will be stored in $this->children using
    * this property of the resulting child object.
    */
-  static $child_key = null;
+  public static $child_key = null;
 
   /** 
    * Name of iterator objects returned by this collection.
    */
-  static $iterator = '\ArrayIterator';
+  public static $iterator = '\ArrayIterator';
 
   /** 
    * Cached iterator.
@@ -122,4 +122,9 @@ abstract class Collection implements \ArrayAccess, \IteratorAggregate, \Countabl
 
     unset( $this->children[ $offset ] );
   }//end offsetUnset
+
+	public function post_type() {
+		$child = static::$child;
+		return $child::$post_type;
+	}//end post_type
 }//end class DJB\Collection
