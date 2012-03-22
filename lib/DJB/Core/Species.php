@@ -2,6 +2,6 @@
 
 namespace DJB\Core;
 
-class SpeciesObject extends \DJB\DataObject {
+class Species extends \DJB\DataObject {
 	public static $post_type = 'djb-species';
-}//end class DJB\Core\SpeciesObject
+}//end class DJB\Core\Species
