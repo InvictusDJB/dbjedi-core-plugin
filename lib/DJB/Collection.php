@@ -30,6 +30,11 @@ abstract class Collection implements \ArrayAccess, \IteratorAggregate, \Countabl
 
   protected $children = null;
 
+	/**
+	 * WordPress query object
+	 */
+	protected $query;
+
   abstract public function get();
 
   public function add_children( $rows ) { 
