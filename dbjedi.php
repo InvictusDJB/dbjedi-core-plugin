@@ -13,5 +13,6 @@ require plugin_dir_path( __FILE__ ) . '/autoload.php';
 
 // set the plugin dir
 DJB\WordPress::plugin_dir( plugin_dir_path( __FILE__ ) );
+DJB\WordPress::template_dir( DJB\WordPress::plugin_dir() . '/templates' );
 
 add_action( 'init', array( 'DJB\WordPress', 'init' ) );
