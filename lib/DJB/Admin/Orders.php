@@ -6,7 +6,51 @@ class Orders {
 	static $post_type = 'djb-order';
 	static $class = 'DJB\Admin\Orders';
 
-	public static function register_post_type() {
+	/**
+	 * Set up the columns that appear on the list page
+	 */
+	public static function admin_columns( $old_columns ) {
+		$columns = array();
+
+		$columns['cb'] = '<input type="checkbox" />';
+		$columns['title'] = _x('Order', 'column name');
+		$columns['path'] = __('Path');
+
+		return $columns;
+	}//end admin_columns
+
+	/**
+	 * echo the contents of custom columns defined in admin_columns
+	 */
+	public static function admin_custom_column( $column, $post_id ) {
+		switch( $column ) {
+			case 'path':
+				$terms = wp_get_post_terms( $post_id, 'djb-path' );
+
+				$out = '';
+				foreach( $terms as $term ) {
+					$out .= "{$term->name}, ";
+				}//end foreach
+
+				echo substr( $out, 0, -2 );
+				break;
+		}//end switch
+	}//end admin_columns
+
+	/**
+	 * set the ordering for the query
+	 */
+	public static function get_posts( &$query ) {
+		if( $query->query_vars['post_type'] === static::$post_type ) {
+			$query->set('orderby', 'title');
+			$query->set('order', 'asc');
+		}//end if
+	}//end get_posts
+
+	/**
+	 * register the post types, actions, and filters
+	 */
+	public static function register() {
 		$labels = array(
 			'name' => _x('Orders', 'post type general name'),
 			'singular_name' => _x('Orders', 'post type singular name'),
@@ -49,41 +93,9 @@ class Orders {
 
 		register_taxonomy_for_object_type( 'djb-path', static::$post_type );
 
-		add_filter('manage_edit-' . static::$post_type . '_columns', array( static::$class, 'wp_admin_columns' ) );
-		add_filter('manage_' . static::$post_type . '_posts_custom_column', array( static::$class, 'wp_admin_custom_column' ), 10, 2 );
+		add_filter('manage_edit-' . static::$post_type . '_columns', array( static::$class, 'admin_columns' ) );
+		add_filter('manage_' . static::$post_type . '_posts_custom_column', array( static::$class, 'admin_custom_column' ), 10, 2 );
 
-		add_action( 'pre_get_posts', array( static::$class, 'wp_get_posts' ), 1 );
-	}//end register_custom_post_type
-
-	public static function wp_admin_columns( $old_columns ) {
-		$columns = array();
-
-		$columns['cb'] = '<input type="checkbox" />';
-		$columns['title'] = _x('Order', 'column name');
-		$columns['path'] = __('Path');
-
-		return $columns;
-	}//end wp_admin_columns
-
-	public static function wp_admin_custom_column( $column, $post_id ) {
-		switch( $column ) {
-			case 'path':
-				$terms = wp_get_post_terms( $post_id, 'djb-path' );
-
-				$out = '';
-				foreach( $terms as $term ) {
-					$out .= "{$term->name}, ";
-				}//end foreach
-
-				echo substr( $out, 0, -2 );
-				break;
-		}//end switch
-	}//end wp_admin_columns
-
-	public static function wp_get_posts( &$query ) {
-		if( $query->query_vars['post_type'] === static::$post_type ) {
-			$query->set('orderby', 'title');
-			$query->set('order', 'asc');
-		}//end if
-	}//end wp_get_posts
+		add_action( 'pre_get_posts', array( static::$class, 'get_posts' ), 1 );
+	}//end register
 }//end class DJB\Orders

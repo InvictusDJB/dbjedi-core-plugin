@@ -6,13 +6,62 @@ class Ranks {
 	static $post_type = 'djb-rank';
 	static $class = 'DJB\Admin\Ranks';
 
+	/**
+	 * Set up the columns that appear on the list page
+	 */
+	public static function admin_columns( $old_columns ) {
+		$columns = array();
+
+		$columns['cb'] = '<input type="checkbox" />';
+		$columns['title'] = _x('Ranks', 'column name');
+		$columns['abbr'] = __('Abbreviation');
+		$columns['order_id'] = __('Order');
+		$columns['sort_order'] = __('Sort Order');
+
+		return $columns;
+	}//end admin_columns
+
+	/**
+	 * echo the contents of custom columns defined in admin_columns
+	 */
+	public static function admin_custom_column( $column, $post_id ) {
+		switch( $column ) {
+			case 'abbr':
+				echo get_post_meta( $post_id, 'abbr', true );
+				break;
+			case 'order_id':
+				echo self::order( get_post_meta( $post_id, 'order_id', true ) );
+				break;
+			case 'sort_order':
+				echo get_post_meta( $post_id, 'sort_order', true );
+				break;
+		}//end switch
+	}//end admin_columns
+
+	/**
+	 * set the ordering for the query
+	 */
+	public static function get_posts( &$query ) {
+		if( $query->query_vars['post_type'] === static::$post_type ) {
+			$query->set('meta_key', 'sort_order');
+			$query->set('orderby', 'meta_value_num');
+			$query->set('order', 'asc');
+		}//end if
+	}//end get_posts
+
+	/**
+	 * return the Order name for a given order_id
+	 */
 	public static function order( $order_id ) {
 		$order = \DJB\Core\Order::get( $order_id );
 
 		return $order ? $order->post_title: 'All';
 	}//end order
 
-	public static function register_post_type() {
+	/**
+	 * register the post types, actions, and filters
+	 */
+	public static function register() {
 		$labels = array(
 			'name' => _x('Ranks', 'post type general name'),
 			'singular_name' => _x('Ranks', 'post type singular name'),
@@ -53,43 +102,12 @@ class Ranks {
 
 		register_post_type( static::$post_type, $args );
 
-		add_filter('manage_edit-' . static::$post_type . '_columns', array( static::$class, 'wp_admin_columns' ) );
-		add_filter('manage_' . static::$post_type . '_posts_custom_column', array( static::$class, 'wp_admin_custom_column' ), 10, 2 );
+		add_filter('manage_edit-' . static::$post_type . '_columns', array( static::$class, 'admin_columns' ) );
+		add_filter('manage_' . static::$post_type . '_posts_custom_column', array( static::$class, 'admin_custom_column' ), 10, 2 );
 
-		add_action( 'pre_get_posts', array( static::$class, 'wp_get_posts' ), 1 );
-	}//end register_custom_post_type
+		add_action( 'pre_get_posts', array( static::$class, 'get_posts' ), 1 );
 
-	public static function wp_admin_columns( $old_columns ) {
-		$columns = array();
+		add_action( 'add_meta_boxes', array( static::$class, 'meta_boxes' ) );
+	}//end register
 
-		$columns['cb'] = '<input type="checkbox" />';
-		$columns['title'] = _x('Ranks', 'column name');
-		$columns['abbr'] = __('Abbreviation');
-		$columns['order_id'] = __('Order');
-		$columns['sort_order'] = __('Sort Order');
-
-		return $columns;
-	}//end wp_admin_columns
-
-	public static function wp_admin_custom_column( $column, $post_id ) {
-		switch( $column ) {
-			case 'abbr':
-				echo get_post_meta( $post_id, 'abbr', true );
-				break;
-			case 'order_id':
-				echo self::order( get_post_meta( $post_id, 'order_id', true ) );
-				break;
-			case 'sort_order':
-				echo get_post_meta( $post_id, 'sort_order', true );
-				break;
-		}//end switch
-	}//end wp_admin_columns
-
-	public static function wp_get_posts( &$query ) {
-		if( $query->query_vars['post_type'] === static::$post_type ) {
-			$query->set('meta_key', 'sort_order');
-			$query->set('orderby', 'meta_value_num');
-			$query->set('order', 'asc');
-		}//end if
-	}//end wp_get_posts
 }//end class DJB\Ranks

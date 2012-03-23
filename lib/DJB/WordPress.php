@@ -31,9 +31,9 @@ class WordPress {
 	}//end plugin_dir
 
 	public static function register_post_types() {
-		Admin\Orders::register_post_type();
-		Admin\Ranks::register_post_type();
-		Admin\Species::register_post_type();
+		Admin\Orders::register();
+		Admin\Ranks::register();
+		Admin\Species::register();
 	}//end register_custom_post_types
 
 	public static function register_taxonomies() {

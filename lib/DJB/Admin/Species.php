@@ -6,7 +6,32 @@ class Species {
 	static $post_type = 'djb-species';
 	static $class = 'DJB\Admin\Species';
 
-	public static function register_post_type() {
+	/**
+	 * Set up the columns that appear on the list page
+	 */
+	public static function admin_columns( $old_columns ) {
+		$columns = array();
+
+		$columns['cb'] = '<input type="checkbox" />';
+		$columns['title'] = _x('Species', 'column name');
+
+		return $columns;
+	}//end admin_columns
+
+	/**
+	 * set the ordering for the query
+	 */
+	public static function get_posts( &$query ) {
+		if( $query->query_vars['post_type'] === static::$post_type ) {
+			$query->set('orderby', 'title');
+			$query->set('order', 'asc');
+		}//end if
+	}//end get_posts
+
+	/**
+	 * register the post types, actions, and filters
+	 */
+	public static function register() {
 		$labels = array(
 			'name' => _x('Species', 'post type general name'),
 			'singular_name' => _x('Species', 'post type singular name'),
@@ -44,24 +69,8 @@ class Species {
 
 		register_post_type( static::$post_type, $args );
 
-		add_filter('manage_edit-' . static::$post_type . '_columns', array( static::$class, 'wp_admin_columns' ) );
+		add_filter('manage_edit-' . static::$post_type . '_columns', array( static::$class, 'admin_columns' ) );
 
-		add_action( 'pre_get_posts', array( static::$class, 'wp_get_posts' ), 1 );
-	}//end register_custom_post_type
-
-	public static function wp_admin_columns( $old_columns ) {
-		$columns = array();
-
-		$columns['cb'] = '<input type="checkbox" />';
-		$columns['title'] = _x('Species', 'column name');
-
-		return $columns;
-	}//end wp_admin_columns
-
-	public static function wp_get_posts( &$query ) {
-		if( $query->query_vars['post_type'] === static::$post_type ) {
-			$query->set('orderby', 'title');
-			$query->set('order', 'asc');
-		}//end if
-	}//end wp_get_posts
+		add_action( 'pre_get_posts', array( static::$class, 'get_posts' ), 1 );
+	}//end register
 }//end class DJB\Admin\Species
