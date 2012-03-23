@@ -39,4 +39,14 @@ class WordPress {
 	public static function register_taxonomies() {
 		Admin\Taxonomy\Path::register();
 	}//end register_taxonomies
+
+	public static function template_dir( $path = null ) {
+		static $template_dir;
+
+		if( $path ) {
+			$template_dir = $path;
+		}//end if
+
+		return $template_dir;
+	}//end template_idr
 }//end class DJB\WordPress

@@ -11,56 +11,32 @@ class Orders extends \DJB\Importer {
 			array(
 				'post_title' => 'Krath',
 				'legacy_id' => 'Krath',
-				'tax_input' => array(
-					'djb-path' => array(
-						'Dark',
-					),
-				),
+				'path' => 'dark',
 			),
 			array(
 				'post_title' => 'Obelisk',
 				'legacy_id' => 'Obelisk',
-				'tax_input' => array(
-					'djb-path' => array(
-						'Dark',
-					),
-				),
+				'path' => 'dark',
 			),
 			array(
 				'post_title' => 'Sith',
 				'legacy_id' => 'Sith',
-				'tax_input' => array(
-					'djb-path' => array(
-						'Dark',
-					),
-				),
+				'path' => 'dark',
 			),
 			array(
 				'post_title' => 'Consular',
 				'legacy_id' => 'Sith',
-				'tax_input' => array(
-					'djb-path' => array(
-						'Light',
-					),
-				),
+				'path' => 'light',
 			),
 			array(
 				'post_title' => 'Guardian',
 				'legacy_id' => 'Obelisk',
-				'tax_input' => array(
-					'djb-path' => array(
-						'Light',
-					),
-				),
+				'path' => 'light',
 			),
 			array(
 				'post_title' => 'Sentinel',
 				'legacy_id' => 'Krath',
-				'tax_input' => array(
-					'djb-path' => array(
-						'Light',
-					),
-				),
+				'path' => 'light',
 			),
 		);
 		return $data;
