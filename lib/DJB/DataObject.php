@@ -30,7 +30,14 @@ class DataObject {
 		}//end else
 
 		$query = new \WP_Query( $args );
-		return new $class( $query->posts[0] );
+
+		$obj = $query->posts[0];
+
+		if( $obj ) {
+			return new $class( $obj );
+		}//end if
+
+		return null;
 	}//end get
 
   public function get_static( $var ) { 
@@ -42,7 +49,7 @@ class DataObject {
 			$this->meta = get_post_custom( $this->ID );
 		}//end if
 
-		return $this->meta[ $var ];
+		return count($this->meta[ $var ]) == 1 ? $this->meta[ $var ][0] : $this->meta[ $var ];
 	}//end meta
 
 	/**
