@@ -63,7 +63,6 @@ class Species {
 			'menu_position' => null,
 			'supports' => array(
 				'title',
-				'custom-fields',
 			),
 		);
 
