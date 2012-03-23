@@ -2,7 +2,7 @@
 
 namespace DJB\Core;
 
-class OrderCollection extends \DJB\Collection {
+class OrderCollection extends Collection {
 	public static $child = '\DJB\Core\Order';
 
 	public function get( $args = array() ) {

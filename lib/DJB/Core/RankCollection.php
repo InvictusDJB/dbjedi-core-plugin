@@ -2,7 +2,7 @@
 
 namespace DJB\Core;
 
-class RankCollection extends \DJB\Collection {
+class RankCollection extends Collection {
 	public static $child = '\DJB\Core\Rank';
 
 	public function get( $args = array() ) {

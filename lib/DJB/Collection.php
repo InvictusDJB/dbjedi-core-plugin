@@ -30,11 +30,6 @@ abstract class Collection implements \ArrayAccess, \IteratorAggregate, \Countabl
 
   protected $children = null;
 
-	/**
-	 * WordPress query object
-	 */
-	protected $query;
-
   abstract public function get();
 
   public function add_children( $rows ) { 
@@ -123,8 +118,4 @@ abstract class Collection implements \ArrayAccess, \IteratorAggregate, \Countabl
     unset( $this->children[ $offset ] );
   }//end offsetUnset
 
-	public function post_type() {
-		$child = static::$child;
-		return $child::$post_type;
-	}//end post_type
 }//end class DJB\Collection

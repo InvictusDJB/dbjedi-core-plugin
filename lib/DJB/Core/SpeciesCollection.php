@@ -2,7 +2,7 @@
 
 namespace DJB\Core;
 
-class SpecieCollection extends \DJB\Collection {
+class SpecieCollection extends Collection {
 	public static $child = '\DJB\Core\SpeciesObject';
 
 	public function get( $args = array() ) {
