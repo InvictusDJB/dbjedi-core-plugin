@@ -14,6 +14,7 @@ class Admin {
 			'djb-order' => 'Orders',
 			'djb-species' => 'Species',
 			'djb-rank' => 'Ranks',
+			'djb-users' => 'Users',
 		);
 
 		foreach( $importers as $slug => $name ) {
@@ -44,4 +45,10 @@ class Admin {
 
 		$importer->page();
 	}//end importer_species
+
+	public static function importer_djb_users() {
+		$importer = new Importer\Users;
+
+		$importer->page();
+	}//end importer_users
 }//end DJB\Plugin
