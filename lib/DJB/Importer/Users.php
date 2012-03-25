@@ -24,8 +24,8 @@ class Users extends \DJB\Importer {
 
 		$sql = "
 			SELECT TOP {$num} member_id pin,
-			       'm' + CONVERT(varchar(5), member_id) user_login,
-			       'm' + CONVERT(varchar(5), member_id) user_nicename,
+			       member_id user_login,
+			       member_id user_nicename,
 			       name display_name,
 				     email user_email,
 						 join_date user_registered ,
@@ -45,45 +45,45 @@ class Users extends \DJB\Importer {
 		if( $data = \DJB::db('olddjb')->GetAll( $sql, array( $from ) ) ) {
 
 			$meta_fields = array(
-				'order_id',
-				'surname',
-				'master_pin',
-				'deleted',
 				'active',
-				'invisible',
-				'recruiter_id',
-				'quote',
-				'gmrg_id',
-				'url',
-				'saber',
-				'warbanner',
-				'robes',
-				'loa',
-				'loa_start',
-				'loa_end',
-				'loa_reason',
 				'avatar',
-				'probation',
-				'probation_start',
-				'probation_end',
 				'country',
-				'timezone',
-				'personal_image',
-				'xfire',
-				'xbox',
-				'playstation',
-				'wii',
-				'saber_locked',
-				'warbanner_locked',
-				'robes_locked',
-				'gender',
-				'gmrg_rank_id',
-				'prestige',
 				'credits',
 				'credits_earned',
+				'deleted',
+				'gender',
+				'gmrg_id',
+				'gmrg_rank_id',
+				'invisible',
+				'loa',
+				'loa_end',
+				'loa_reason',
+				'loa_start',
+				'master_pin',
+				'order_id',
+				'personal_image',
+				'playstation',
+				'prestige',
+				'probation',
+				'probation_end',
+				'probation_start',
+				'quote',
+				'recruiter_id',
+				'robes',
+				'robes_locked',
+				'saber',
+				'saber_locked',
+				'surname',
 				'swtor',
+				'timezone',
 				'tor_characters',
 				'tor_rank',
+				'url',
+				'warbanner',
+				'warbanner_locked',
+				'wii',
+				'xbox',
+				'xfire',
 			);
 
 			$default_meta = array(
@@ -95,6 +95,8 @@ class Users extends \DJB\Importer {
 			);
 
 			foreach( $data as &$user ) {
+				$user['user_login'] = 'u' . str_pad( $user['user_login'], 5, '0', STR_PAD_LEFT );
+				$user['user_nicename'] = 'u' . str_pad( $user['user_login'], 5, '0', STR_PAD_LEFT );
 				$user['user_email'] = strtolower( $user['user_email'] );
 				$user['meta'] = array();
 				$user['meta']['pin'] = $user['pin'];
