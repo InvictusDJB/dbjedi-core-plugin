@@ -59,6 +59,12 @@ class Database {
 				$db->SetFetchMode(ADODB_FETCH_ASSOC);
 				@$db->Connect($_DB[$params['connect']]['server'], $_DB[$params['connect']]['username'], base64_decode($_DB[$params['connect']]['password']), $_DB[$params['connect']]['database']);
 				break;
+			case 'wp':
+				// initialize the database object and connect to the server
+				$db = &ADONewConnection('mysql');
+				$db->SetFetchMode(ADODB_FETCH_ASSOC);
+				@$db->Connect($_DB[$params['connect']]['server'], $_DB[$params['connect']]['username'], base64_decode($_DB[$params['connect']]['password']), $_DB[$params['connect']]['database']);
+				break;
 		}//end switch
 
 		$db->memCache = $config['adodb_memcache'];
