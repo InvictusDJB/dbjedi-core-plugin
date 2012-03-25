@@ -25,8 +25,7 @@ class Database {
 	* @return mixed
 	*/
 	public static function connect($connect, $type = 'adodb') {
-		include('/srv/www/beta.darkjedibrotherhood.com/database_connections/' . $connect . '.php');
-		include('/srv/www/beta.darkjedibrotherhood.com/database_connections/memcache.php');
+		include '/srv/www/beta.darkjedibrotherhood.com/database_connections/memcache.php';
 
 		// expand the connection string
 		$params = explode('/', $connect);
@@ -39,31 +38,29 @@ class Database {
 			mkdir( $ADODB_CACHE_DIR );
 		}//end if
 
-		switch($params['connect'])
-		{
+		$server = djb_db_loader( $params['connect'], 'server' );
+		$username = djb_db_loader( $params['connect'], 'username' );
+		$password = djb_db_loader( $params['connect'], 'password' );
+		$database = djb_db_loader( $params['connect'], 'database' );
+
+		switch($params['connect']) {
 			case 'olddjb':
 				$db = &ADONewConnection('mssql');
 				$db->SetFetchMode(ADODB_FETCH_ASSOC);
-				@$db->Connect($_DB[$params['connect']]['server'], $_DB[$params['connect']]['username'], base64_decode($_DB[$params['connect']]['password']), $_DB[$params['connect']]['database']);
-
-				/*
-				$db = &ADONewConnection('odbc_mssql');
-				$db->SetFetchMode(ADODB_FETCH_ASSOC);
-				//@$db->Connect('Driver={SQL Server};Server=72.18.131.169:1533;Database=realdb_sql;', $_DB[$params['connect']]['username'], base64_decode($_DB[$params['connect']]['password']));
-				@$db->Connect('odbc-realdb', $_DB[$params['connect']]['username'], base64_decode($_DB[$params['connect']]['password']));
-				 */
+				//@$db->Connect($_DB[$params['connect']]['server'], $_DB[$params['connect']]['username'], base64_decode($_DB[$params['connect']]['password']), $_DB[$params['connect']]['database']);
+				@$db->Connect($server, $username, base64_decode($password), $database);
 				break;
 			case 'djb':
 				// initialize the database object and connect to the server
 				$db = &ADONewConnection('mysql');
 				$db->SetFetchMode(ADODB_FETCH_ASSOC);
-				@$db->Connect($_DB[$params['connect']]['server'], $_DB[$params['connect']]['username'], base64_decode($_DB[$params['connect']]['password']), $_DB[$params['connect']]['database']);
+				@$db->Connect($server, $username, base64_decode($password), $database);
 				break;
 			case 'wp':
 				// initialize the database object and connect to the server
 				$db = &ADONewConnection('mysql');
 				$db->SetFetchMode(ADODB_FETCH_ASSOC);
-				@$db->Connect($_DB[$params['connect']]['server'], $_DB[$params['connect']]['username'], base64_decode($_DB[$params['connect']]['password']), $_DB[$params['connect']]['database']);
+				@$db->Connect($server, $username, base64_decode($password), $database);
 				break;
 		}//end switch
 
