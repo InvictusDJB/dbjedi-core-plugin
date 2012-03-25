@@ -31,6 +31,7 @@ class WordPress {
 	}//end plugin_dir
 
 	public static function register_post_types() {
+		Admin\Medals::register();
 		Admin\Orders::register();
 		Admin\Ranks::register();
 		Admin\Species::register();

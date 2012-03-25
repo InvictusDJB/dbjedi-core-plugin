@@ -17,7 +17,12 @@ class Importer {
 
 				if( $custom_fields ) {
 					foreach( $custom_fields as $key => $value ) {
-						add_post_meta( $post_id, $key, $value, true );
+						if( 'parent_legacy_id' == $key ) {
+							$parent = new WP_Query( "post_type={$post_type}&meta_key=legacy_id&meta_value={$value}" );
+							add_post_meta( $post_id, $key, $value, true );
+						} else {
+							add_post_meta( $post_id, $key, $value, true );
+						}//end else
 					}//edn foreach
 				}//end if
 			}//end if

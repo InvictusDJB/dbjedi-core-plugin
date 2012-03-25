@@ -11,6 +11,7 @@ class Admin {
 		add_menu_page( 'DJB Importer', 'DJB Importer', 'manage_options', 'djb-data-importer', array( 'DJB\Admin', 'importer' ) );
 
 		$importers = array(
+			'djb-medal' => 'Medals',
 			'djb-order' => 'Orders',
 			'djb-species' => 'Species',
 			'djb-rank' => 'Ranks',
@@ -28,17 +29,23 @@ class Admin {
 	public static function importer() {
 	}//end importer
 
+	public static function importer_djb_medal() {
+		$importer = new Importer\Medals;
+
+		$importer->page();
+	}//end importer_medal
+
 	public static function importer_djb_order() {
 		$importer = new Importer\Orders;
 
 		$importer->page();
-	}//end importer_orders
+	}//end importer_order
 
 	public static function importer_djb_rank() {
 		$importer = new Importer\Ranks;
 
 		$importer->page();
-	}//end importer_ranks
+	}//end importer_rank
 
 	public static function importer_djb_species() {
 		$importer = new Importer\Species;
