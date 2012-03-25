@@ -155,6 +155,10 @@ class Users extends \DJB\Importer {
 	public function user_import( $users ) {
 		global $wpdb;
 
+		if( ! current_user_can( 'edit_user' ) ) {
+			die('You do not have access to import users');
+		}//end if
+
 		echo '<div style="float:right;">';
 		foreach( (array) $users as $user ) {
 			$meta = $user['meta'];
@@ -191,6 +195,10 @@ class Users extends \DJB\Importer {
 	}//end user_import
 
 	public function purge_users() {
+		if( ! current_user_can( 'edit_user' ) ) {
+			die('You do not have access to purge users');
+		}//end if
+
 		$sql = "DELETE FROM wp_usermeta WHERE user_id > 2";	
 		\DJB::db('wp')->Execute( $sql );
 
@@ -210,6 +218,10 @@ class Users extends \DJB\Importer {
 	}//end purge_users
 
 	public function page() {
+		if( ! current_user_can( 'edit_user' ) ) {
+			die('You do not have access to import users');
+		}//end if
+
 		if( $_GET['purge'] ) {
 			$this->purge_users();
 		}//end if
@@ -224,7 +236,7 @@ class Users extends \DJB\Importer {
 			<?php 
 				$sql = "SELECT count(*) FROM members";
 				$old_users = \DJB::db('olddjb')->GetOne( $sql );
-				echo $old_users;
+				echo number_format( $old_users );
 			?>
 			</td>
 			<td rowspan="7">
@@ -240,9 +252,9 @@ class Users extends \DJB\Importer {
 			<td>
 			<?php 
 				$users = count_users(); 
-				echo $users['total_users'];
+				echo number_format( $users['total_users'] - 2 );
 			?>
-			<a id="user-purge" href="admin.php?page=djb-data-importer-djb-users&purge=true">Purge Users</a>
+			&mdash; <a id="user-purge" style="color: red; border-color: red;" href="admin.php?page=djb-data-importer-djb-users&purge=true">Purge Users</a>
 			</td>
 		</tr>
 		<tr valign="top">
@@ -293,16 +305,19 @@ class Users extends \DJB\Importer {
 		</tr>
 		</table>
 	</form>
+	<script>
+		jQuery(function() {
+			jQuery('#user-purge').click(function( e ) {
+				return confirm('Are you sure you want to purge all imported users?');
+			});
+		});
+	</script>
 
 	<?php
 	if( 'complete' == $_POST['run'] && $users['total_users'] <= $old_users ) {
 	?>
 	<script>
 		jQuery(function() {
-			jQuery('#user-purge').click(function() {
-				return confirm('Are you sure you want to purge all imported users?');
-			});
-
 			setTimeout(function() {
 				jQuery('#user-import').submit();
 			}, 5000);
