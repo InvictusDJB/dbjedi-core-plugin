@@ -21,7 +21,8 @@ class DJB {
    */
   public $databases = array(
 	  'djb' => 'djb',
-	  'olddjb' => 'olddjb'
+	  'olddjb' => 'olddjb',
+	  'wp' => 'wp',
   );
 
   /**
@@ -663,10 +664,18 @@ class DJB {
 		return $key;
 	}//end randomString
 	
-	static function redirect($url)
-	{
-		header('Location: '.$url);
-		exit;
+	static function redirect($url) {
+		if( headers_sent() ) {
+			echo "
+				<script>
+					document.location = '{$url}';
+				</script>
+			";
+			die;
+		} else {
+			header('Location: '.$url);
+			exit;
+		}//end else
 	}//end redirect
 
 	/**
