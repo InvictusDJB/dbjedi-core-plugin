@@ -98,6 +98,7 @@ class Users extends \DJB\Importer {
 				$user['user_email'] = strtolower( $user['user_email'] );
 				$user['meta'] = array();
 				$user['meta']['pin'] = $user['pin'];
+				$user['meta']['first_name'] = $user['display_name'];
 				$user['meta']['nickname'] = $user['display_name'];
 
 				if( $user['master_pin'] ) {
@@ -108,9 +109,10 @@ class Users extends \DJB\Importer {
 					$user['meta']['master_pin'] = $user['master_pin'];
 				}//end if
 
-				$user['meta']['deleted'] = $user['deleted'];
 				$user['meta']['active'] = $user['active'];
 				$user['meta']['invisible'] = $user['invisible'];
+
+				$user['deleted'] = $user['deleted'] ? 1 : 0;
 
 				$order_slug = str_replace(' ', '-', strtolower( trim( $user['order_id'] ) ) );
 				$order = \DJB\Core\Order::get( $order_slug );
@@ -120,7 +122,6 @@ class Users extends \DJB\Importer {
 
 				unset(
 					  $user['surname']
-					, $user['deleted']
 					, $user['active']
 					, $user['invisible']
 					, $user['master_pin']
@@ -189,21 +190,44 @@ class Users extends \DJB\Importer {
 		return $user_id;
 	}//end user_import
 
+	public function purge_users() {
+		$sql = "DELETE FROM wp_usermeta WHERE user_id > 2";	
+		\DJB::db('wp')->Execute( $sql );
+
+		$sql = "SELECT max(umeta_id) + 1 FROM wp_usermeta";
+		$id = \DJB::db('wp')->GetOne( $sql );	
+
+		$sql = "ALTER TABLE wp_usermeta AUTO_INCREMENT={$id}";
+		\DJB::db('wp')->Execute( $sql );
+
+		$sql = "DELETE FROM wp_users WHERE ID > 2";	
+		\DJB::db('wp')->Execute( $sql );
+
+		$sql = "ALTER TABLE wp_users AUTO_INCREMENT=3";
+		\DJB::db('wp')->Execute( $sql );
+
+		\DJB::redirect('admin.php?page=djb-data-importer-djb-users');
+	}//end purge_users
+
 	public function page() {
+		if( $_GET['purge'] ) {
+			$this->purge_users();
+		}//end if
 ?>
 <div class="wrap">
 	<h2><?php echo $this->page_title; ?> Importer</h2>
-	<form method="post" action="admin.php?page=djb-data-importer-djb-users&import=true">
+	<form method="post" action="admin.php?page=djb-data-importer-djb-users&import=true" id="user-import">
 	<table class="form-table">
 		<tr valign="top">
 			<th scope="row"><?php echo $this->page_title; ?> in Old DJB Site</th>
 			<td>
 			<?php 
 				$sql = "SELECT count(*) FROM members";
-				echo \DJB::db('olddjb')->GetOne( $sql );
+				$old_users = \DJB::db('olddjb')->GetOne( $sql );
+				echo $old_users;
 			?>
 			</td>
-			<td rowspan="6">
+			<td rowspan="7">
 <?php
 		if( $_GET['import'] ) {
 			$last_import = $this->user_import( $this->data( (int) $_POST['start'], (int) $_POST['num'] ) );
@@ -218,6 +242,7 @@ class Users extends \DJB\Importer {
 				$users = count_users(); 
 				echo $users['total_users'];
 			?>
+			<a id="user-purge" href="admin.php?page=djb-data-importer-djb-users&purge=true">Purge Users</a>
 			</td>
 		</tr>
 		<tr valign="top">
@@ -243,11 +268,20 @@ class Users extends \DJB\Importer {
 		</tr>
 		<tr valign="top">
 			<th scope="row">Pin to start:</th>
-			<td><input name="start" value="<?php echo substr( $user->user_login, 1 ); ?>"/></td>
+			<td><input name="start" value="<?php echo is_numeric( substr( $user->user_login, 1 ) ) ? substr( $user->user_login, 1 ) : 0; ?>"/></td>
 		</tr>
 		<tr valign="top">
 			<th scope="row">Num to import:</th>
-			<td><input name="num" value="<?php echo $_POST['num'] ?: 1; ?>"/></td>
+			<td><input name="num" value="<?php echo $_POST['num'] ?: 100; ?>"/></td>
+		</tr>
+		<tr valign="top">
+			<th scope="row">Run:</th>
+			<td>
+				<select name="run">
+					<option value="only" <?php selected( $_POST['run'], 'only' ); ?>>Imma taek this slow. Run only once.</option>
+					<option value="complete" <?php selected( $_POST['run'], 'complete' ); ?>>IMPORT ALL THE THINGS!</option>
+				</select>
+			</td>
 		</tr>
 		<tr valign="top">
 			<th scope="row"></th>
@@ -259,6 +293,24 @@ class Users extends \DJB\Importer {
 		</tr>
 		</table>
 	</form>
+
+	<?php
+	if( 'complete' == $_POST['run'] && $users['total_users'] <= $old_users ) {
+	?>
+	<script>
+		jQuery(function() {
+			jQuery('#user-purge').click(function() {
+				return confirm('Are you sure you want to purge all imported users?');
+			});
+
+			setTimeout(function() {
+				jQuery('#user-import').submit();
+			}, 5000);
+		});
+	</script>
+	<?php
+	}//end if
+	?>
 </div>
 <?php
 	}//end page
