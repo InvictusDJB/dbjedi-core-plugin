@@ -6,7 +6,7 @@ class Orders extends \DJB\Importer {
 	public $post_type = 'djb-order';
 	public $page_title = 'Orders';
 
-	public function data() {
+	public function data( $count = false ) {
 		$data = array(
 			array(
 				'post_title' => 'Krath',
@@ -39,6 +39,11 @@ class Orders extends \DJB\Importer {
 				'path' => 'light',
 			),
 		);
+
+		if( $count ) {
+			return count( $data );
+		}//end if
+
 		return $data;
 	}//end data
 }//end Orders

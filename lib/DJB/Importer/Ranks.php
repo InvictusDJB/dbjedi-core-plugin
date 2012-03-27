@@ -6,7 +6,11 @@ class Ranks extends \DJB\Importer {
 	public $post_type = 'djb-rank';
 	public $page_title = 'Ranks';
 
-	public function data() {
+	public function data( $count = false ) {
+		if( $count ) {
+			return \DJB::db('olddjb')->GetOne("SELECT count(*) FROM ranks");
+		}//end if
+
 		$sql = "
 			SELECT name post_title,
 						 abbr,

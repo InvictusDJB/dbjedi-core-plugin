@@ -6,20 +6,27 @@ class Medals extends \DJB\Importer {
 	public $post_type = 'djb-medal';
 	public $page_title = 'Medals';
 
-	public function data() {
+	public function data( $count = false ) {
+
+		if( $count ) {
+			$medal = \DJB::db('djb')->GetOne("SELECT count(*) FROM db_medal");
+			$medal += \DJB::db('djb')->GetOne("SELECT count(*) FROM db_medal_upgrades WHERE type = 'name'");
+			return $medal;
+		}//end if
+
 		$sql = "
 			SELECT name post_title,
-			       id legacy_id,
-			       abbr,
-			       group_abbr,
-			       sort_order menu_order,
-			       group_sort,
-			       logo,
-			       status_id,
+						 id legacy_id,
+						 abbr,
+						 group_abbr,
+						 sort_order menu_order,
+						 group_sort,
+						 logo,
+						 status_id,
 						 type_id,
 						 0 quantity,
 						 (SELECT distinct type FROM db_medal_upgrades u WHERE medal_id = m.id) upgrade_type
-			  FROM db_medal m
+				FROM db_medal m
 			 ORDER BY sort_order, group_sort
 		";
 

@@ -5,6 +5,25 @@ namespace DJB\Importer;
 class Users extends \DJB\Importer {
 	public $page_title = 'Users';
 
+	public function count_new() {
+		if( ! $this->count_new ) {
+			$users = count_users(); 
+			$this->count_new = $users['total_users'] - 2;
+		}//end if
+
+		return $this->count_new;
+	}//end count_new
+
+	public function count_old() {
+		if( ! $this->count_old ) {
+			$sql = "SELECT count(*) FROM members";
+			$this->count_old = \DJB::db('olddjb')->GetOne( $sql );
+		}//end if
+
+		return $this->count_old;
+	}//end count_old
+
+
 	public function data( $from = 0, $num = 1 ) {
 		global $wpdb;
 
@@ -236,9 +255,7 @@ class Users extends \DJB\Importer {
 			<th scope="row"><?php echo $this->page_title; ?> in Old DJB Site</th>
 			<td>
 			<?php 
-				$sql = "SELECT count(*) FROM members";
-				$old_users = \DJB::db('olddjb')->GetOne( $sql );
-				echo number_format( $old_users );
+				echo number_format( $this->count_old() );
 			?>
 			</td>
 			<td rowspan="7">
@@ -253,8 +270,7 @@ class Users extends \DJB\Importer {
 			<th scope="row"><?php echo $this->page_title; ?> in New Site</th>
 			<td>
 			<?php 
-				$users = count_users(); 
-				echo number_format( $users['total_users'] - 2 );
+				echo number_format( $this->count_new() );
 			?>
 			&mdash; <a id="user-purge" style="color: red; border-color: red;" href="admin.php?page=djb-data-importer-djb-users&purge=true">Purge Users</a>
 			</td>

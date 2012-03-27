@@ -3,6 +3,38 @@
 namespace DJB;
 
 class Importer {
+	public function count_new() {
+		if( ! $this->count_new ) {
+			$loop = new \WP_Query("post_type={$this->post_type}&post_status=any");
+			$this->count_new = $loop->found_posts;
+		}//end if
+
+		return $this->count_new;
+	}//end count_new
+
+	public function count_old() {
+		if( ! $this->count_old ) {
+			$this->count_old = $this->data( true );
+		}//end if
+
+		return $this->count_old;
+	}//end count_old
+
+	public function fully_imported() {
+		return $this->count_new() >= $this->count_old();
+	}//end fully_imported
+
+	public static function get( $which ) {
+		static $importers = array();
+
+		if( ! $importers[ $which ] ) {
+			$class = '\DJB\Importer\\' . $which;
+			$importers[ $which ] = new $class;
+		}//end if
+
+		return $importers[ $which ];
+	}//end get
+
 	public function named_import( $post_type, $posts ) {
 		global $wpdb;
 
@@ -109,15 +141,12 @@ class Importer {
 	<table class="form-table">
 		<tr valign="top">
 			<th scope="row"><?php echo $this->page_title; ?> in Old DJB Site</th>
-			<td><?php echo count( $this->data() ); ?></td>
+			<td><?php echo number_format( $this->count_old() ); ?></td>
 		</tr>
 		<tr valign="top">
 			<th scope="row"><?php echo $this->page_title; ?> in New Site</th>
 			<td>
-<?php
-		$loop = new \WP_Query("post_type={$this->post_type}&post_status=any");
-		echo $loop->found_posts;
-?>
+				<?php echo number_format( $this->count_new() ); ?>
 				&mdash; <a id="purge" style="color: red; border-color: red;" href="admin.php?page=djb-data-importer-<?php echo $this->post_type; ?>&purge=true">Purge Data</a>
 			</td>
 		</tr>
