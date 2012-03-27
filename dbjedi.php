@@ -9,6 +9,9 @@ Author URI: http://borkweb.com
 License: MIT
 */
 
+// endable post revisions
+define( 'WP_POST_REVISIONS', 15 );
+
 require plugin_dir_path( __FILE__ ) . '/autoload.php';
 
 // set the plugin dir
