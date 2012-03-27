@@ -10,6 +10,14 @@ class Importer {
 			$sql = "SELECT post_name FROM $wpdb->posts WHERE post_title = %s AND post_type = %s LIMIT 1";
 			$exists = $wpdb->get_var( $wpdb->prepare( $sql, $post['post_title'], $post_type ) ); 
 
+			$wpdb->flush();
+
+			/*
+			die( \DJB::dbug( $wpdb->prepare( $sql, $post['post_title'], $post_type ) ) );
+			die( \DJB::dbug( $post['post_title'] ) );
+			die( \DJB::dbug( $exists ) );
+			//*/
+
 			if( ! $exists ) {
 				$custom_fields = $post['custom_fields'];
 				unset( $post['custom_fields'] );
@@ -18,8 +26,18 @@ class Importer {
 				if( $custom_fields ) {
 					foreach( $custom_fields as $key => $value ) {
 						if( 'parent_legacy_id' == $key ) {
-							$parent = new WP_Query( "post_type={$post_type}&meta_key=legacy_id&meta_value={$value}" );
 							add_post_meta( $post_id, $key, $value, true );
+
+							// find the parent
+							$parent = new \WP_Query( "post_type={$post_type}&meta_key=legacy_id&meta_value={$value}" );
+							$parent = $parent->get_posts();
+							$parent = $parent[0];
+
+							// set the post parent
+							wp_update_post( array(
+								'ID' => $post_id,
+								'post_parent' => $parent->ID,
+							));
 						} else {
 							add_post_meta( $post_id, $key, $value, true );
 						}//end else
@@ -80,6 +98,10 @@ class Importer {
 			$method = $_POST['how'] ?: 'draft';
 			$this->named_import( $this->post_type, $this->posts( $this->data(), $method ) );
 		}//end if
+
+		if( $_GET['purge'] ) {
+			$this->purge();
+		}//end if
 ?>
 <div class="wrap">
 	<h2><?php echo $this->page_title; ?> Importer</h2>
@@ -93,9 +115,10 @@ class Importer {
 			<th scope="row"><?php echo $this->page_title; ?> in New Site</th>
 			<td>
 <?php
-		$loop = new \WP_Query( 'post_type='.$this->post_type );
+		$loop = new \WP_Query("post_type={$this->post_type}&post_status=any");
 		echo $loop->found_posts;
 ?>
+				&mdash; <a id="purge" style="color: red; border-color: red;" href="admin.php?page=djb-data-importer-<?php echo $this->post_type; ?>&purge=true">Purge Data</a>
 			</td>
 		</tr>
 		<tr valign="top">
@@ -112,7 +135,31 @@ class Importer {
 			<input type="submit" class="button-primary" value="<?php _e('Import') ?>" />
 		</p>
 	</form>
+	<script>
+		jQuery(function() {
+			jQuery('#purge').click(function( e ) {
+				return confirm('Are you sure you want to purge all that data?');
+			});
+		});
+	</script>
+
 </div>
 <?php
 	}//end page
+
+	public function purge() {
+		global $wpdb;
+
+		if( ! current_user_can( 'edit_user' ) ) {
+			die('You do not have access to purge ' . $this->post_type );
+		}//end if
+
+		$posts = new \WP_Query("post_type={$this->post_type}&posts_per_page=-1&post_status=any");
+		$posts = $posts->get_posts();
+		foreach( $posts as $post ) {
+			wp_delete_post( $post->ID, TRUE );
+		}//end foreach
+
+		\DJB::redirect('admin.php?page=djb-data-importer-' . $this->post_type);
+	}//end purge_users
 }//end class DJB\Importer
