@@ -16,10 +16,9 @@ class Medals {
 		$columns['title'] = _x('Medals', 'column name');
 		$columns['abbr'] = __('Abbr');
 		$columns['group_abbr'] = __('Group Abbr');
-		$columns['quantity'] = __('#');
-		$columns['sort_order'] = __('Sort Order');
+		$columns['quantity'] = __('Quantity');
+		$columns['menu_order'] = __('Sort Order');
 		$columns['group_sort'] = __('Group Sort');
-		$columns['sub'] = __('Children');
 
 		return $columns;
 	}//end admin_columns
@@ -28,6 +27,8 @@ class Medals {
 	 * echo the contents of custom columns defined in admin_columns
 	 */
 	public static function admin_custom_column( $column, $post_id ) {
+		$post = get_post( $post_id );
+
 		switch( $column ) {
 			case 'abbr':
 				echo get_post_meta( $post_id, 'abbr', true );
@@ -36,13 +37,17 @@ class Medals {
 				echo get_post_meta( $post_id, 'group_abbr', true );
 				break;
 			case 'group_sort':
-				echo get_post_meta( $post_id, 'group_sort', true );
+				$group_sort = get_post_meta( $post_id, 'group_sort', true );
+				echo $group_sort ?: '';
 				break;
 			case 'quantity':
-				echo get_post_meta( $post_id, 'quantity', true );
+				$quantity = get_post_meta( $post_id, 'quantity', true );
+				echo $quantity ?: '';
 				break;
-			case 'sort_order':
-				echo get_post_meta( $post_id, 'sort_order', true );
+			case 'menu_order':
+				if( ! $post->post_parent ) {
+					echo $post->menu_order;
+				}//end if
 				break;
 		}//end switch
 	}//end admin_columns
@@ -52,23 +57,7 @@ class Medals {
 	 */
 	public static function get_posts( &$query ) {
 		if( $query->query_vars['post_type'] === static::$post_type ) {
-			$meta = array(
-				array(
-					'key' => 'sort_order',
-					'type' => 'numeric',
-				),
-				array(
-					'key' => 'group_sort',
-					'type' => 'numeric',
-				),
-				array(
-					'key' => 'quantity',
-					'type' => 'numeric',
-				),
-			);
-			$query->set('orderby', 'meta_value');
-			$query->set('meta_key', 'sort_order');
-			$query->set('meta_value_num', true);
+			$query->set('orderby', 'menu_order');
 			$query->set('order', 'asc');
 		}//end if
 		//die( \DJB::dbug( $query ) );
@@ -105,11 +94,12 @@ class Medals {
 			'rewrite' => true,
 			'capability_type' => 'post',
 			'has_archive' => true,
-			'hierarchical' => false,
+			'hierarchical' => true,
 			'menu_position' => null,
 			'supports' => array(
 				'title',
 				'custom-fields',
+				'page-attributes',
 			),
 		);
 

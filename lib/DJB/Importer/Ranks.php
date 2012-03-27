@@ -10,7 +10,7 @@ class Ranks extends \DJB\Importer {
 		$sql = "
 			SELECT name post_title,
 						 abbr,
-						 sort_order,
+						 sort_order menu_order,
 						 ordr order_id,
 						 saberpoints saber_points,
 						 handtohandpoints hand_to_hand_points,

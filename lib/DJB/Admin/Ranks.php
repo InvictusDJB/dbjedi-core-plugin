@@ -30,7 +30,7 @@ class Ranks {
 		$columns['title'] = _x('Ranks', 'column name');
 		$columns['abbr'] = __('Abbreviation');
 		$columns['order_id'] = __('Order');
-		$columns['sort_order'] = __('Sort Order');
+		$columns['menu_order'] = __('Sort Order');
 
 		return $columns;
 	}//end admin_columns
@@ -39,6 +39,8 @@ class Ranks {
 	 * echo the contents of custom columns defined in admin_columns
 	 */
 	public static function admin_custom_column( $column, $post_id ) {
+		$post = get_post( $post_id );
+
 		switch( $column ) {
 			case 'abbr':
 				echo get_post_meta( $post_id, 'abbr', true );
@@ -46,8 +48,8 @@ class Ranks {
 			case 'order_id':
 				echo self::order( get_post_meta( $post_id, 'order_id', true ) );
 				break;
-			case 'sort_order':
-				echo get_post_meta( $post_id, 'sort_order', true );
+			case 'menu_order':
+				echo $post->menu_order;
 				break;
 		}//end switch
 	}//end admin_columns
@@ -57,8 +59,7 @@ class Ranks {
 	 */
 	public static function get_posts( &$query ) {
 		if( $query->query_vars['post_type'] === static::$post_type ) {
-			$query->set('meta_key', 'sort_order');
-			$query->set('orderby', 'meta_value_num');
+			$query->set('orderby', 'menu_order');
 			$query->set('order', 'asc');
 		}//end if
 	}//end get_posts
@@ -127,7 +128,7 @@ class Ranks {
 			'menu_position' => null,
 			'supports' => array(
 				'title',
-				/*'custom-fields',*/
+				'page-attributes',
 			),
 			'taxonomies' => array(
 				'djb-order',
@@ -160,7 +161,6 @@ class Ranks {
 
 		$int_fields = array(
 			'order_id',
-			'sort_order',
 			'discipline_points',
 			'force_points',
 			'hand_to_hand_points',

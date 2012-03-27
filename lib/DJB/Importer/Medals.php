@@ -12,9 +12,8 @@ class Medals extends \DJB\Importer {
 			       id legacy_id,
 			       abbr,
 			       group_abbr,
-			       sort_order,
+			       sort_order menu_order,
 			       group_sort,
-			       description,
 			       logo,
 			       status_id,
 						 type_id,
@@ -28,6 +27,14 @@ class Medals extends \DJB\Importer {
 		$data = array();
 
 		foreach( $results as $row ) {
+			if( ! $row['group_abbr'] ) {
+				unset( $row['group_abbr'] );
+			}//end if
+
+			if( ! $row['group_sort'] ) {
+				unset( $row['group_sort'] );
+			}//end if
+
 			$data[ $row['legacy_id'] ] = $row;
 		}//end foreach
 
@@ -35,8 +42,8 @@ class Medals extends \DJB\Importer {
 			SELECT name post_title,
  						 abbr,
 						 quantity,
-						 medal_id legacy_id,
-						 id
+						 medal_id parent_legacy_id,
+						 quantity menu_order
         FROM db_medal_upgrades
 			 WHERE type = 'name'
 		";
@@ -44,10 +51,10 @@ class Medals extends \DJB\Importer {
 		$results = \DJB::db('djb')->Execute( $sql );
 
 		foreach( $results as $row ) {
-			$row['post_title'] = $data[ $row['legacy_id'] ]['post_title'] . ' with ' . $row['post_title'];
+			$row['post_title'] = $data[ $row['parent_legacy_id'] ]['post_title'] . ' with ' . $row['post_title'];
 			$row['upgrade_type'] = 'none';
-			$row['parent_legacy_id'] = $row['legacy_id'];
-			$row = array_merge( $data[ $row['legacy_id'] ], $row );
+			$row = array_merge( $data[ $row['parent_legacy_id'] ], $row );
+			unset( $row['legacy_id'] );
 			$data[] = $row;
 		}//end foreach
 
