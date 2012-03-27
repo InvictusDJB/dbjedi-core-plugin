@@ -13,6 +13,7 @@ class Medals {
 		$columns = array();
 
 		$columns['cb'] = '<input type="checkbox" />';
+		$columns['img'] = __('');
 		$columns['title'] = _x('Medals', 'column name');
 		$columns['abbr'] = __('Abbr');
 		$columns['group_abbr'] = __('Group Abbr');
@@ -32,6 +33,21 @@ class Medals {
 		switch( $column ) {
 			case 'abbr':
 				echo get_post_meta( $post_id, 'abbr', true );
+				break;
+			case 'img':
+				$image = get_post_meta( $post_id, 'logo', true );
+				$image_base = \DJB\WordPress::images( static::$post_type );
+				$image_url = $image_base . '/' . $image;
+				$image_path = \DJB\WordPress::root_dir() . $image_url;
+
+				if( 
+					   ! $post->post_parent 
+					&& $image_base
+					&& $image 
+					&& file_exists( $image_path )
+				) {
+					echo "<img src='".\DJB\WordPress::images( static::$post_type )."/{$image}'/>";
+				}//end if
 				break;
 			case 'group_abbr':
 				echo get_post_meta( $post_id, 'group_abbr', true );

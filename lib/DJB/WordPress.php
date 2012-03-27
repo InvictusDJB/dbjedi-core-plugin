@@ -3,6 +3,31 @@
 namespace DJB;
 
 class WordPress {
+	public static function base_dir( $path = null ) {
+		static $dir;
+
+		if( $path ) {
+			$dir = $path;
+		}//end if
+
+		return $dir;
+	}//end base_dir
+
+	public static function images( $what = null, $path = null ) {
+		static $images = array();
+
+		if( is_array( $what ) ) {
+			$images = array_merge( $images, $what );
+		} else {
+			if( $path ) {
+				$images[ $what ] = $path;
+			} else {
+				return $images[ $what ];
+			}//end else
+		}//end else
+
+	}//end root_idr
+
 	public static function init() {
 		self::register_taxonomies();
 		self::register_post_types();
@@ -25,6 +50,10 @@ class WordPress {
 
 		if( $path ) {
 			$plugin_dir = $path;
+
+			static::template_dir( $plugin_dir . '/templates' );
+			static::base_dir( dirname( dirname( dirname( $plugin_dir ) ) ) );
+			static::root_dir( dirname( static::base_dir() ) );
 		}//end if
 
 		return $plugin_dir;
@@ -40,6 +69,16 @@ class WordPress {
 	public static function register_taxonomies() {
 		Admin\Taxonomy\Path::register();
 	}//end register_taxonomies
+
+	public static function root_dir( $path = null ) {
+		static $dir;
+
+		if( $path ) {
+			$dir = $path;
+		}//end if
+
+		return $dir;
+	}//end root_idr
 
 	public static function template_dir( $path = null ) {
 		static $template_dir;

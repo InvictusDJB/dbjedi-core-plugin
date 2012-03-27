@@ -10,12 +10,16 @@ License: MIT
 */
 
 // endable post revisions
-define( 'WP_POST_REVISIONS', 15 );
+define( 'WP_POST_REVISIONS', 10 );
 
 require plugin_dir_path( __FILE__ ) . '/autoload.php';
 
 // set the plugin dir
 DJB\WordPress::plugin_dir( plugin_dir_path( __FILE__ ) );
-DJB\WordPress::template_dir( DJB\WordPress::plugin_dir() . '/templates' );
+
+// set up image paths
+DJB\WordPress::images(array(
+	'djb-medal' => '/images/medals',
+));
 
 add_action( 'init', array( 'DJB\WordPress', 'init' ) );
