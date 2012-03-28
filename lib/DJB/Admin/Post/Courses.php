@@ -1,8 +1,8 @@
 <?php
 
-namespace DJB\Admin;
+namespace DJB\Admin\Post;
 
-class Courses extends Post {
+class Courses extends \DJB\Admin\Post {
 	public static $post_type = 'djb-course';
 	public static $parent_menu = 'djb-academy';
 	public static $plural = 'Courses';
@@ -36,4 +36,4 @@ class Courses extends Post {
 		}//end if
 	}//end get_posts
 
-}//end class DJB\Admin\Courses
+}//end class DJB\Admin\Post\Courses

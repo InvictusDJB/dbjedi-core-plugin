@@ -1,8 +1,8 @@
 <?php
 
-namespace DJB\Admin;
+namespace DJB\Admin\Post;
 
-class Medals extends Post {
+class Medals extends \DJB\Admin\Post {
 	public static $post_type = 'djb-medal';
 	public static $plural = 'Medals';
 	public static $singular = 'Medal';
@@ -85,4 +85,4 @@ class Medals extends Post {
 			$query->set('order', 'asc');
 		}//end if
 	}//end get_posts
-}//end class DJB\Admin\Medals
+}//end class DJB\Admin\Post\Medals

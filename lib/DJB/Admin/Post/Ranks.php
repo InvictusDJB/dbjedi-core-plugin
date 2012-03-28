@@ -1,8 +1,8 @@
 <?php
 
-namespace DJB\Admin;
+namespace DJB\Admin\Post;
 
-class Ranks extends Post {
+class Ranks extends \DJB\Admin\Post {
 	public static $post_type = 'djb-rank';
 	public static $plural = 'Ranks';
 	public static $singular = 'Rank';
@@ -130,4 +130,4 @@ class Ranks extends Post {
 			update_post_meta( $post_id, 'abbr', esc_attr( $_POST['abbr'] ) );
 		}//end if
 	}//end save
-}//end class DJB\Ranks
+}//end class DJB\Admin\Post\Ranks

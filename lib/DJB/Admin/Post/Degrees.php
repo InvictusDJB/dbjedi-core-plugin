@@ -1,8 +1,8 @@
 <?php
 
-namespace DJB\Admin;
+namespace DJB\Admin\Post;
 
-class Degrees extends Post {
+class Degrees extends \DJB\Admin\Post {
 	public static $post_type = 'djb-degree';
 	public static $parent_menu = 'djb-academy';
 	public static $plural = 'Degrees';
@@ -53,4 +53,4 @@ class Degrees extends Post {
 			$query->set('order', 'desc');
 		}//end if
 	}//end get_posts
-}//end class DJB\Admin\Degrees
+}//end class DJB\Admin\Post\Degrees

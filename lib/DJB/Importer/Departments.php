@@ -12,7 +12,7 @@ class Departments extends \DJB\Importer {
 		}//end if
 
 		$sql = "
-			SELECT sa_course_id legacy_id,
+			SELECT sa_course_group_id legacy_id,
 			       name post_title,
 						 member_id instructor_id
 				FROM sa_course_groups

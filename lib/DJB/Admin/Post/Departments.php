@@ -1,12 +1,18 @@
 <?php
 
-namespace DJB\Admin;
+namespace DJB\Admin\Post;
 
-class Departments extends Post {
+class Departments extends \DJB\Admin\Post {
 	public static $post_type = 'djb-department';
 	public static $parent_menu = 'djb-academy';
 	public static $plural = 'Departments';
 	public static $singular = 'Department';
+	public static $supports = array(
+		'title',
+		'editor',
+		'revisions',
+		'custom-fields',
+	);
 
 	/**
 	 * Set up the columns that appear on the list page
@@ -37,13 +43,4 @@ class Departments extends Post {
 				break;
 		}//end switch
 	}//end admin_columns
-
-	public static function supports() {
-		return array(
-			'title',
-			'editor'
-			'revisions',
-			'custom-fields',
-		);
-	}//end supports
-}//end class DJB\Admin\Departments
+}//end class DJB\Admin\Post\Departments

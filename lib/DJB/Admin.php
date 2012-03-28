@@ -20,18 +20,45 @@ class Admin {
 		add_submenu_page( 'djb-data-importer', 'Dashboard', 'Dashboard', 'manage_options', 'djb-data-importer', array( 'DJB\Admin', 'importer' ) );
 
 		foreach( $importers as $slug => $name ) {
-			add_submenu_page( 'djb-data-importer', $name, $name, 'manage_options', 'djb-data-importer-' . $slug, array( 'DJB\Admin', 'importer_' . str_replace( '-', '_', $slug ) ) );
+			$object = self::importer_object( $name );
+
+			add_submenu_page( 
+				'djb-data-importer', 
+				$name, 
+				$name, 
+				'manage_options', 
+				'djb-data-importer-' . $slug, 
+				array( 
+					$object, 
+					'page'
+				) 
+			);
 		}//end foreach
 	}//end admin_menu
+
 	public static function importer() {
 		include WordPress::template_dir() . '/admin/importer.php';
 	}//end importer
+
+	public static function importer_object( $which ) {
+		static $objects = array();
+
+		if( ! $objects[ $which ] ) {
+			$objects[ $which ] = Importer::get( $which );
+		}//end if
+
+		return $objects[ $which ];
+	}//end importer_object
 
 	public static function importer_dependencies() {
 		$importers = array(
 			'djb-course' => array(
 				'djb-users' => array(
 				),
+				'djb-department' => array(
+				),
+			),
+			'djb-department' => array(
 			),
 			'djb-degree' => array(
 				'djb-course' => array(
@@ -42,12 +69,12 @@ class Admin {
 			'djb-rank' => array(
 				'djb-order' => array(
 				),
-			'djb-medal' => array(
-			),
+				'djb-medal' => array(
+				),
 			),
 			'djb-species' => array(
-			'djb-medal' => array(
-			),
+				'djb-medal' => array(
+				),
 			),
 			'djb-users' => array(
 				'djb-rank' => array(
@@ -62,6 +89,7 @@ class Admin {
 		$importers = array(
 			'djb-course' => 'Courses',
 			'djb-degree' => 'Degrees',
+			'djb-department' => 'Departments',
 			'djb-medal' => 'Medals',
 			'djb-order' => 'Orders',
 			'djb-species' => 'Species',
@@ -71,34 +99,6 @@ class Admin {
 
 		return $importers;
 	}//end importers
-
-	public static function importer_djb_course() {
-		Importer::get('Courses')->page();
-	}//end importer_course
-
-	public static function importer_djb_degree() {
-		Importer::get('Degrees')->page();
-	}//end importer_degree
-
-	public static function importer_djb_medal() {
-		Importer::get('Medals')->page();
-	}//end importer_medal
-
-	public static function importer_djb_order() {
-		Importer::get('Orders')->page();
-	}//end importer_order
-
-	public static function importer_djb_rank() {
-		Importer::get('Ranks')->page();
-	}//end importer_rank
-
-	public static function importer_djb_species() {
-		Importer::get('Species')->page();
-	}//end importer_species
-
-	public static function importer_djb_users() {
-		Importer::get('Users')->page();
-	}//end importer_users
 
 	public static function maa() {}//end maa
 

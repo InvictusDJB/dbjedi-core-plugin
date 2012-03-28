@@ -65,13 +65,12 @@ class WordPress {
 		foreach( $types as $type ) {
 			if( 'Users' == $type ) continue;
 
-			$class = "\DJB\Admin\\" . $type;
+			$class = "\DJB\Admin\Post\\" . $type;
 			$class::register();
 		}//end foreach
 	}//end register_custom_post_types
 
 	public static function register_taxonomies() {
-		Admin\Taxonomy\Department::register();
 		Admin\Taxonomy\Path::register();
 	}//end register_taxonomies
 

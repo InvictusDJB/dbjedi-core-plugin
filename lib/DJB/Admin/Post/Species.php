@@ -1,8 +1,8 @@
 <?php
 
-namespace DJB\Admin;
+namespace DJB\Admin\Post;
 
-class Species extends Post {
+class Species extends \DJB\Admin\Post {
 	public static $post_type = 'djb-species';
 	public static $plural = 'Species';
 	public static $singular = 'Species';
@@ -21,4 +21,4 @@ class Species extends Post {
 
 		return $columns;
 	}//end admin_columns
-}//end class DJB\Admin\Species
+}//end class DJB\Admin\Post\Species

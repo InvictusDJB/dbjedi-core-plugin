@@ -1,8 +1,8 @@
 <?php
 
-namespace DJB\Admin;
+namespace DJB\Admin\Post;
 
-class Orders extends Post {
+class Orders extends \DJB\Admin\Post {
 	public static $post_type = 'djb-order';
 	public static $plural = 'Orders';
 	public static $singular = 'Order';
@@ -74,9 +74,4 @@ class Orders extends Post {
 		}//end if
 	}//end save
 
-	public static function supports() {
-		return array(
-			'title',
-		);
-	}//end supports
-}//end class DJB\Orders
+}//end class DJB\Admin\Post\Orders
