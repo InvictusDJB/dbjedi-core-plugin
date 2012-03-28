@@ -2,9 +2,17 @@
 
 namespace DJB\Admin;
 
-class Medals {
-	static $post_type = 'djb-medal';
-	static $class = 'DJB\Admin\Medals';
+class Medals extends Post {
+	public static $post_type = 'djb-medal';
+	public static $plural = 'Medals';
+	public static $singular = 'Medal';
+	public static $supports = array(
+		'title',
+		'custom-fields',
+		'page-attributes',
+	);
+	public static $hierarchical = true;
+
 
 	/**
 	 * Set up the columns that appear on the list page
@@ -76,54 +84,5 @@ class Medals {
 			$query->set('orderby', 'menu_order');
 			$query->set('order', 'asc');
 		}//end if
-		//die( \DJB::dbug( $query ) );
 	}//end get_posts
-
-	/**
-	 * register the post types, actions, and filters
-	 */
-	public static function register() {
-		$labels = array(
-			'name' => _x('Medals', 'post type general name'),
-			'singular_name' => _x('Medals', 'post type singular name'),
-			'add_new' => _x('Add New', 'medals'),
-			'add_new_item' => __('Add New Medals'),
-			'edit_item' => __('Edit Medals'),
-			'new_item' => __('New Medals'),
-			'all_items' => __('Medals'),
-			'view_item' => __('View Medals'),
-			'search_items' => __('Search Medals'),
-			'not_found' => __('No medals found'),
-			'not_found_in_trash' => __('No medals found in Trash'),
-			'parent_item_colon' => '',
-			'menu_name' => 'Medals',
-		);
-
-		$args = array(
-			'labels' => $labels,
-			'public' => true,
-			'publicly_queryable' => true,
-			'menu_icon' => null,
-			'show_ui' => true,
-			'show_in_menu' => 'djb-data',
-			'query_var' => true,
-			'rewrite' => true,
-			'capability_type' => 'post',
-			'has_archive' => true,
-			'hierarchical' => true,
-			'menu_position' => null,
-			'supports' => array(
-				'title',
-				'custom-fields',
-				'page-attributes',
-			),
-		);
-
-		register_post_type( static::$post_type, $args );
-
-		add_filter('manage_edit-' . static::$post_type . '_columns', array( static::$class, 'admin_columns' ) );
-		add_filter('manage_' . static::$post_type . '_posts_custom_column', array( static::$class, 'admin_custom_column' ), 10, 2 );
-
-		add_action( 'pre_get_posts', array( static::$class, 'get_posts' ), 1 );
-	}//end register
 }//end class DJB\Admin\Medals

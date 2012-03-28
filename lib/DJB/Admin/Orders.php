@@ -2,9 +2,10 @@
 
 namespace DJB\Admin;
 
-class Orders {
-	static $post_type = 'djb-order';
-	static $class = 'DJB\Admin\Orders';
+class Orders extends Post {
+	public static $post_type = 'djb-order';
+	public static $plural = 'Orders';
+	public static $singular = 'Order';
 
 	/**
 	 * adds custom meta box
@@ -13,7 +14,7 @@ class Orders {
 		add_meta_box(
 				'order_meta_box'
 			, 'Order Data'
-			, array( static::$class, 'meta_box_html' )
+			, array( get_called_class(), 'meta_box_html' )
 			, static::$post_type
 			, 'normal'
 			, 'high'
@@ -44,16 +45,6 @@ class Orders {
 		}//end switch
 	}//end admin_columns
 
-	/**
-	 * set the ordering for the query
-	 */
-	public static function get_posts( &$query ) {
-		if( $query->query_vars['post_type'] === static::$post_type ) {
-			$query->set('orderby', 'title');
-			$query->set('order', 'asc');
-		}//end if
-	}//end get_posts
-
 	public static function meta_box_html( $post ) {
 		$fields = get_post_custom( $post->ID );
 		$fields['path'] = esc_attr( $fields[ 'path' ][0] );
@@ -64,55 +55,6 @@ class Orders {
 
 		include \DJB\WordPress::template_dir() . '/admin/order.meta-box.php';
 	}//end meta_box_html
-
-	/**
-	 * register the post types, actions, and filters
-	 */
-	public static function register() {
-		$labels = array(
-			'name' => _x('Orders', 'post type general name'),
-			'singular_name' => _x('Orders', 'post type singular name'),
-			'add_new' => _x('Add New', 'orders'),
-			'add_new_item' => __('Add New Order'),
-			'edit_item' => __('Edit Order'),
-			'new_item' => __('New Order'),
-			'all_items' => __('Orders'),
-			'view_item' => __('View Orders'),
-			'search_items' => __('Search Orders'),
-			'not_found' => __('No orders found'),
-			'not_found_in_trash' => __('No orders found in Trash'),
-			'parent_item_colon' => '',
-			'menu_name' => 'Orders',
-		);
-
-		$args = array(
-			'labels' => $labels,
-			'public' => true,
-			'publicly_queryable' => true,
-			'menu_icon' => null,
-			'show_ui' => true,
-			'show_in_menu' => 'djb-data',
-			'query_var' => true,
-			'rewrite' => true,
-			'capability_type' => 'post',
-			'has_archive' => true,
-			'hierarchical' => false,
-			'menu_position' => null,
-			'supports' => array(
-				'title',
-			),
-		);
-
-		register_post_type( static::$post_type, $args );
-
-		add_filter('manage_edit-' . static::$post_type . '_columns', array( static::$class, 'admin_columns' ) );
-		add_filter('manage_' . static::$post_type . '_posts_custom_column', array( static::$class, 'admin_custom_column' ), 10, 2 );
-
-		add_action( 'pre_get_posts', array( static::$class, 'get_posts' ), 1 );
-
-		add_action( 'add_meta_boxes', array( static::$class, 'add_meta_boxes' ) );
-		add_action( 'save_post', array( static::$class, 'save' ) );
-	}//end register
 
 	public static function save( $post_id ) {
 		// Bail if we're doing an auto save
@@ -131,4 +73,10 @@ class Orders {
 			update_post_meta( $post_id, 'path', esc_attr( $_POST['path'] ) );
 		}//end if
 	}//end save
+
+	public static function supports() {
+		return array(
+			'title',
+		);
+	}//end supports
 }//end class DJB\Orders
