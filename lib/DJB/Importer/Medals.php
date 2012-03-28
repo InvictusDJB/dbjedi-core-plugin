@@ -21,7 +21,7 @@ class Medals extends \DJB\Importer {
 						 group_abbr,
 						 sort_order menu_order,
 						 group_sort,
-						 logo,
+						 lower( logo ) image,
 						 status_id,
 						 type_id,
 						 0 quantity,
