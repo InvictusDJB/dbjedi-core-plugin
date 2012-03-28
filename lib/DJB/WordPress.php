@@ -60,15 +60,18 @@ class WordPress {
 	}//end plugin_dir
 
 	public static function register_post_types() {
-		Admin\Courses::register();
-		Admin\Degrees::register();
-		Admin\Medals::register();
-		Admin\Orders::register();
-		Admin\Ranks::register();
-		Admin\Species::register();
+		$types = Admin::importers();
+
+		foreach( $types as $type ) {
+			if( 'Users' == $type ) continue;
+
+			$class = "\DJB\Admin\\" . $type;
+			$class::register();
+		}//end foreach
 	}//end register_custom_post_types
 
 	public static function register_taxonomies() {
+		Admin\Taxonomy\Department::register();
 		Admin\Taxonomy\Path::register();
 	}//end register_taxonomies
 
