@@ -60,6 +60,8 @@ class WordPress {
 	}//end plugin_dir
 
 	public static function register_post_types() {
+		Admin\Courses::register();
+		Admin\Degrees::register();
 		Admin\Medals::register();
 		Admin\Orders::register();
 		Admin\Ranks::register();
