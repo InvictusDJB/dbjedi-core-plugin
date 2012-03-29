@@ -14,23 +14,14 @@ class Departments extends \DJB\Importer {
 		$sql = "
 			SELECT sa_course_group_id legacy_id,
 			       name post_title,
-						 member_id legacy_instructor_id
+						 member_id instructor_id
 				FROM sa_course_groups
 		";
 
 		$data = \DJB::db('olddjb')->GetAll( $sql );
 
 		foreach( $data as &$row ) {
-			if( $row['legacy_instructor_id'] ) {
-
-				$user_id = \DJB\Legacy::user_to_id( $row['legacy_instructor_id'] );
-
-				if( ! $user_id ) {
-					throw new \Exception("Whoops!  Could not find a user with a pin of {$row['legacy_instructor_id']}.  Perhaps users haven't been fully imported yet?");
-				}//end if
-
-				$row['instructor_id'] = $user_id;
-			}//end if
+			\DJB\Legacy::translate( $row, 'user', 'instructor_id' );
 
 			unset( $row['legacy_instructor_id'] );
 		}//end foreach

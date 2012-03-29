@@ -62,17 +62,17 @@ class Legacy {
 	 * @param $by string Field from the post table (sort of). This maps to a function name
 	 * @param $required boolean Throw an error if no match was found in WP
 	 */
-	public static function translate( &$row, $what, $field, $by = 'id', $required = false ) {
+	public static function translate( &$row, $what, $field, $by = 'id', $required = true ) {
 		$function = "{$what}_to_{$by}";
 
 		$value = $row[ $field ];
 
-		if( $value && $result = self::$function( $value ) ) {
-			$row[ $field ] = $result;
-
-			if( $required && ! $result ) {
+		if( $value ) {
+			if( $result = self::$function( $value ) ) {
+				$row[ $field ] = $result;
+			} elseif( $required ) {
 				throw new \Exception("Whoops!  Could not find a {$what} with an id of {$value}.  Perhaps the {$what}s haven't been fully imported yet?");
-			}//end if
+			}//end elseif
 		}//end if
 
 		if( ! $row[ $field ] ) {
