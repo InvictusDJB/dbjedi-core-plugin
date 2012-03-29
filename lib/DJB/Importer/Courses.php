@@ -15,11 +15,9 @@ class Courses extends \DJB\Importer {
 			SELECT c.id legacy_id,
 						 CONVERT(text, c.course_name) post_title,
 						 co.sort_order menu_order,
-						 co.coursetype as \"type\",
-						 c.dblink,
-						 c.sa_course_group_id course_group_id,
-						 g.name course_group,
-						 g.member_id legacy_instructor_id,
+						 c.dblink legacy_dblink,
+						 c.sa_course_group_id department_id,
+						 g.member_id instructor_id,
 						 CONVERT(text, co.mailtext) mailtext,
 						 CONVERT(text, c.notes) post_content
 				FROM sa_courses c
@@ -38,20 +36,10 @@ class Courses extends \DJB\Importer {
 
 		foreach( $data as &$row ) {
 			$row['post_content'] = $textile->TextileThis( html_entity_decode( $row['post_content'] ) );
-			if( $row['legacy_instructor_id'] ) {
-				$user = get_users( array(
-					'meta_key' => 'pin',
-					'meta_value' => $row['legacy_instructor_id'],
-				));
 
-				if( ! ($user = $user[0]) ) {
-					throw new \Exception("Whoops!  Could not find a user with a pin of {$row['legacy_instructor_id']}.  Perhaps users haven't been fully imported yet?");
-				}//end if
+			\DJB\Legacy::translate( $row, 'department', 'department_id' );
+			\DJB\Legacy::translate( $row, 'user', 'instructor_id' );
 
-				$row['instructor_id'] = $user->ID;
-			}//end if
-
-			unset( $row['legacy_instructor_id'] );
 		}//end foreach
 		return $data;
 	}//end data

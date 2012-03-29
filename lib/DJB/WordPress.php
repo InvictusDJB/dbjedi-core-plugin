@@ -71,7 +71,6 @@ class WordPress {
 	}//end register_custom_post_types
 
 	public static function register_taxonomies() {
-		Admin\Taxonomy\Path::register();
 	}//end register_taxonomies
 
 	public static function root_dir( $path = null ) {

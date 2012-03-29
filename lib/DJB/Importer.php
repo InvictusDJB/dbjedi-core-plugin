@@ -79,52 +79,6 @@ class Importer {
 		}//end foreach
 	}//end named_import
 
-	public function posts( $data, $status ) {
-		static $valid_fields = array(
-			'ID',
-			'menu_order',
-			'comment_status',
-			'ping_status',
-			'pinged',
-			'post_author',
-			'post_category',
-			'post_content',
-			'post_date',
-			'post_date_gmt',
-			'post_excerpt',
-			'post_name',
-			'post_parent',
-			'post_password',
-			'post_status',
-			'post_title',
-			'post_type',
-			'tags_input',
-			'to_ping',
-			'tax_input',
-		);
-
-		$posts = array();
-		foreach( $data as $d ) {
-			$post = array(
-				'post_type' => $this->post_type,
-				'post_status' => $status,
-				'custom_fields' => array(),
-			);
-
-			foreach( $d as $key => $value ) {
-				if( in_array( $key, $valid_fields ) ) {
-					$post[ $key ] = $value;
-				} else {
-					$post[ 'custom_fields' ][ $key ] = $value;
-				}
-			}//end foreach
-
-			$posts[] = $post;
-		}//end foreach
-
-		return $posts;
-	}//end posts
-
 	public function page() {
 		if( $_GET['import'] ) {
 			$method = $_POST['how'] ?: 'draft';
@@ -176,6 +130,55 @@ class Importer {
 <?php
 	}//end page
 
+	public function posts( $data, $status ) {
+		static $valid_fields = array(
+			'ID',
+			'menu_order',
+			'comment_status',
+			'ping_status',
+			'pinged',
+			'post_author',
+			'post_category',
+			'post_content',
+			'post_date',
+			'post_date_gmt',
+			'post_excerpt',
+			'post_name',
+			'post_parent',
+			'post_password',
+			'post_status',
+			'post_title',
+			'post_type',
+			'tags_input',
+			'to_ping',
+			'tax_input',
+		);
+
+		$posts = array();
+		foreach( $data as $d ) {
+			$post = array(
+				'post_type' => $this->post_type,
+				'post_status' => $status,
+				'custom_fields' => array(),
+			);
+
+			foreach( $d as $key => $value ) {
+				if( in_array( $key, $valid_fields ) ) {
+					$post[ $key ] = $value;
+				} else {
+					$post[ 'custom_fields' ][ $key ] = $value;
+				}
+			}//end foreach
+
+			$posts[] = $post;
+		}//end foreach
+
+		return $posts;
+	}//end posts
+
+	/**
+	 * purges all posts of the instantiated class' post type
+	 */
 	public function purge() {
 		global $wpdb;
 
