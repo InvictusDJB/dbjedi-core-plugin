@@ -1,9 +1,9 @@
 <?php
 
-namespace DJB\Core;
+namespace DJB\Core\Title;
 
-class CourseCollection extends Collection {
-	public static $child = '\DJB\Core\CourseObject';
+class Collection extends \DJB\Core\Collection {
+	public static $child = '\DJB\Core\Title';
 
 	public function get( $args = array() ) {
 		$args['post_type'] = $this->post_type();
@@ -21,4 +21,4 @@ class CourseCollection extends Collection {
 
 		return $this->query->posts;
 	}//end get
-}//end class DJB\Core\CourseCollection
+}//end class DJB\Core\Title\Collection

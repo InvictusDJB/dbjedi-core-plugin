@@ -1,9 +1,9 @@
 <?php
 
-namespace DJB\Core;
+namespace DJB\Core\Rank;
 
-class TitleCollection extends Collection {
-	public static $child = '\DJB\Core\TitleObject';
+class Collection extends \DJB\Core\Collection {
+	public static $child = '\DJB\Core\Rank';
 
 	public function get( $args = array() ) {
 		$args['post_type'] = $this->post_type();
@@ -21,4 +21,4 @@ class TitleCollection extends Collection {
 
 		return $this->query->posts;
 	}//end get
-}//end class DJB\Core\TitleCollection
+}//end class DJB\Core\Rank\Collection

@@ -1,9 +1,9 @@
 <?php
 
-namespace DJB\Core;
+namespace DJB\Core\Species;
 
-class DegreeCollection extends Collection {
-	public static $child = '\DJB\Core\DegreeObject';
+class Collection extends \DJB\Core\Collection {
+	public static $child = '\DJB\Core\Species';
 
 	public function get( $args = array() ) {
 		$args['post_type'] = $this->post_type();
@@ -21,4 +21,4 @@ class DegreeCollection extends Collection {
 
 		return $this->query->posts;
 	}//end get
-}//end class DJB\Core\DegreeCollection
+}//end class DJB\Core\Species\Collection

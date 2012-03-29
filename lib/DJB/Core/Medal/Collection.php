@@ -1,9 +1,9 @@
 <?php
 
-namespace DJB\Core;
+namespace DJB\Core\Medal;
 
-class SpeciesCollection extends Collection {
-	public static $child = '\DJB\Core\SpeciesObject';
+class Collection extends \DJB\Core\Collection {
+	public static $child = '\DJB\Core\Medal';
 
 	public function get( $args = array() ) {
 		$args['post_type'] = $this->post_type();
@@ -21,4 +21,4 @@ class SpeciesCollection extends Collection {
 
 		return $this->query->posts;
 	}//end get
-}//end class DJB\Core\SpeciesCollection
+}//end class DJB\Core\Medal\Collection

@@ -1,9 +1,9 @@
 <?php
 
-namespace DJB\Core;
+namespace DJB\Core\Degree;
 
-class RankCollection extends Collection {
-	public static $child = '\DJB\Core\Rank';
+class Collection extends \DJB\Core\Collection {
+	public static $child = '\DJB\Core\Degree';
 
 	public function get( $args = array() ) {
 		$args['post_type'] = $this->post_type();
@@ -21,4 +21,4 @@ class RankCollection extends Collection {
 
 		return $this->query->posts;
 	}//end get
-}//end class DJB\Core\RankCollection
+}//end class DJB\Core\Degree\Collection

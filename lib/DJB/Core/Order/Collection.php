@@ -1,8 +1,8 @@
 <?php
 
-namespace DJB\Core;
+namespace DJB\Core\Order;
 
-class OrderCollection extends Collection {
+class Collection extends \DJB\Core\Collection {
 	public static $child = '\DJB\Core\Order';
 
 	public function get( $args = array() ) {
@@ -21,4 +21,4 @@ class OrderCollection extends Collection {
 
 		return $this->query->posts;
 	}//end get
-}//end class DJB\Core\OrderCollection
+}//end class DJB\Core\Order\Collection
