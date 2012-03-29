@@ -22,8 +22,24 @@ class Courses extends \DJB\Admin\Post {
 
 		$columns['cb'] = '<input type="checkbox" />';
 		$columns['title'] = _x('Course', 'column name');
+		$columns['instructor'] = __('Instructor');
 
 		return $columns;
+	}//end admin_columns
+
+	/**
+	 * echo the contents of custom columns defined in admin_columns
+	 */
+	public static function admin_custom_column( $column, $post_id ) {
+		$post = get_post( $post_id );
+
+		switch( $column ) {
+			case 'instructor':
+				if( $user_id = get_post_meta( $post_id, 'instructor_id', true ) ) {
+					echo \DJB\Links::dossier( $user_id );
+				}//end if
+				break;
+		}//end switch
 	}//end admin_columns
 
 	/**

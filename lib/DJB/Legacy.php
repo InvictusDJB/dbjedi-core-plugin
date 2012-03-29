@@ -54,6 +54,13 @@ class Legacy {
 	}//end species_to_id
 
 	/**
+	 * translates an old DJB title id to a WP title ID
+	 */
+	public static function title_to_id( $legacy_id ) {
+		return self::_old_to_new_by_meta( 'djb-title', $legacy_id );
+	}//end title_to_id
+
+	/**
 	 * translates a given field from a legacy DB value to a WP value
 	 *
 	 * @param $row array Row from the database

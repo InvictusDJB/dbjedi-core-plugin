@@ -22,8 +22,7 @@ class Departments extends \DJB\Admin\Post {
 
 		$columns['cb'] = '<input type="checkbox" />';
 		$columns['title'] = _x(static::$singular, 'column name');
-		$columns['abbr'] = __('Abbreviation');
-		$columns['menu_order'] = __('Sort Order');
+		$columns['instructor'] = __('Instructor');
 
 		return $columns;
 	}//end admin_columns
@@ -35,11 +34,10 @@ class Departments extends \DJB\Admin\Post {
 		$post = get_post( $post_id );
 
 		switch( $column ) {
-			case 'abbr':
-				echo get_post_meta( $post_id, 'abbr', true );
-				break;
-			case 'menu_order':
-				echo $post->menu_order;
+			case 'instructor':
+				if( $user_id = get_post_meta( $post_id, 'instructor_id', true ) ) {
+					echo \DJB\Links::dossier( $user_id );
+				}//end if
 				break;
 		}//end switch
 	}//end admin_columns
