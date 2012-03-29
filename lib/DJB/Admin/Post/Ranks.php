@@ -64,8 +64,8 @@ class Ranks extends \DJB\Admin\Post {
 	 */
 	public static function get_posts( &$query ) {
 		if( $query->query_vars['post_type'] === static::$post_type ) {
-			$query->set('orderby', 'menu_order');
-			$query->set('order', 'asc');
+			$query->set('orderby', $_GET['orderby'] ?: 'menu_order');
+			$query->set('order', $_GET['order'] ?: 'asc');
 		}//end if
 	}//end get_posts
 

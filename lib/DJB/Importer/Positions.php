@@ -8,7 +8,7 @@ class Positions extends \DJB\Importer {
 
 	public function data( $count = false ) {
 		if( $count ) {
-			return \DJB::db('olddjb')->GetOne("SELECT count(*) FROM positions WHERE positiontype IN ('Assistant', 'Main Body')");
+			return \DJB::db('olddjb')->GetOne("SELECT count(*) FROM positions WHERE positiontype IN ('Assistant', 'Main Body', 'Tribune', 'Chamber of Justice', 'Society Leader') AND sort_order < 999");
 		}//end if
 
 		$sql = "
@@ -16,36 +16,61 @@ class Positions extends \DJB\Importer {
 						 position_id legacy_id,
 						 abbr,
 						 description post_content,
+						 positiontype type,
 						 sort_order menu_order
-			  FROM member_titles
-			 WHERE positiontype = 'Main Body'
-			   AND sort_order <> 999
+			  FROM positions
+			 WHERE positiontype IN ('Main Body','Tribune', 'Chamber of Justice', 'Society Leader')
+			   AND sort_order < 999
 			 ORDER BY sort_order
 		";
 
-		$results = \DJB::db('djb')->Execute( $sql );
+		$results = \DJB::db('olddjb')->Execute( $sql );
 		$data = array();
 
 		foreach( $results as $row ) {
-			$data[ $row['legacy_id'] ] = $row;
+			$data[ $row['abbr'] ] = $row;
 		}//end foreach
 
 		$sql = "
 			SELECT name post_title,
-						 position_id parent_legacy_id,
+						 position_id legacy_id,
 						 abbr,
 						 description post_content,
+						 positiontype type,
 						 sort_order menu_order
-			  FROM member_titles
+			  FROM positions
 			 WHERE positiontype = 'Assistant'
-			   AND sort_order <> 999
+			   AND sort_order < 999
 			 ORDER BY sort_order
 		";
 
-		$results = \DJB::db('djb')->Execute( $sql );
+		$results = \DJB::db('olddjb')->Execute( $sql );
 
 		foreach( $results as $row ) {
-			$data[] = $row;
+			$parent_abbr = null;
+
+			if( 'Wiki' == $row['abbr'] ) {
+				$parent_abbr = 'T:W';
+			} elseif( 'FIC' == $row['abbr'] ) {
+				$parent_abbr = 'T:F';
+			} elseif( 'DCM' == $row['abbr'] ) {
+				$parent_abbr = 'CM';
+			} elseif( 'GAM' == $row['abbr'] ) {
+				$parent_abbr = 'T:G';
+			} elseif( in_array( $row['abbr'], array('PROF', 'A:PROF', 'DOC') ) ) {
+				$parent_abbr = 'HM';
+			} else {
+				preg_match('/.+:(.+)/', $row['abbr'], $matches );
+				$parent_abbr = $matches[1];
+
+				$parent_abbr = $parent_abbr == 'V' ? 'VOICE' : $parent_abbr;
+				$parent_abbr = $parent_abbr == 'F' ? 'FIST' : $parent_abbr;
+			}//end else
+
+			if( $parent_abbr ) {
+				$row['parent_legacy_id'] = $data[ $parent_abbr ]['legacy_id'];
+				$data[] = $row;
+			}//end if
 		}//end foreach
 
 		return $data;

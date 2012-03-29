@@ -66,6 +66,8 @@ class Admin {
 			),
 			'djb-medal' => array(
 			),
+			'djb-position' => array(
+			),
 			'djb-rank' => array(
 				'djb-order' => array(
 				),
@@ -94,6 +96,7 @@ class Admin {
 			'djb-department' => 'Departments',
 			'djb-medal' => 'Medals',
 			'djb-order' => 'Orders',
+			'djb-position' => 'Positions',
 			'djb-species' => 'Species',
 			'djb-title' => 'Titles',
 			'djb-rank' => 'Ranks',
