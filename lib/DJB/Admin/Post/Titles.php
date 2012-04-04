@@ -9,6 +9,7 @@ class Titles extends \DJB\Admin\Post {
 	public static $singular = 'Title';
 	public static $supports = array(
 		'title',
+		'custom-fields',
 	);
 
 	/**

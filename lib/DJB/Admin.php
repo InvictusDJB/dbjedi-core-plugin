@@ -52,6 +52,10 @@ class Admin {
 
 	public static function importer_dependencies() {
 		$importers = array(
+			'djb-competition' => array(
+				'djb-users' => array(
+				),
+			),
 			'djb-course' => array(
 				'djb-users' => array(
 				),
@@ -91,6 +95,7 @@ class Admin {
 
 	public static function importers() {
 		$importers = array(
+			'djb-competition' => 'Competitions',
 			'djb-course' => 'Courses',
 			'djb-degree' => 'Degrees',
 			'djb-department' => 'Departments',

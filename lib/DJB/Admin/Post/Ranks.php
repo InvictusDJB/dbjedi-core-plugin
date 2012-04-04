@@ -80,7 +80,7 @@ class Ranks extends \DJB\Admin\Post {
 		$fields['saber_points']        = esc_attr( $fields[ 'saber_points' ][0] );
 		$fields['skill_points']        = esc_attr( $fields[ 'skill_points' ][0] );
 
-		$orders = new \DJB\Core\OrderCollection;
+		$orders = new \DJB\Core\Order\Collection;
 
 		// adds a nonce field that we can verify that it is set to avoid accidental saving
 		// from an alternate source
