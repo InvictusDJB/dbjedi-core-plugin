@@ -61,6 +61,13 @@ class Legacy {
 	}//end title_to_id
 
 	/**
+	 * translates an old DJB news id to a WP legacy ID
+	 */
+        public static function news_to_id( $legacy_id ) {
+                return self::_old_to_new_by_meta( 'post', $legacy_id );
+        }//end news_to_id
+
+	/**
 	 * translates a given field from a legacy DB value to a WP value
 	 *
 	 * @param $row array Row from the database
