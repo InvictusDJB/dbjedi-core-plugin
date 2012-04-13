@@ -152,6 +152,7 @@ class Importer {
 			'tags_input',
 			'to_ping',
 			'tax_input',
+                        'legacy_id' //legacy_id added to support old News_ID field. We could also do this as a custom field, but I was curious if it would work this way.
 		);
 
 		$posts = array();
