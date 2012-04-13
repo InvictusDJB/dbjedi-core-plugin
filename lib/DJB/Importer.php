@@ -3,8 +3,6 @@
 namespace DJB;
 
 class Importer {
-	public $paged_import = false;
-
 	public function count_new() {
 		if( ! $this->count_new ) {
 			$loop = new \WP_Query("post_type={$this->post_type}&post_status=any");
@@ -84,7 +82,7 @@ class Importer {
 	public function page() {
 		if( $_GET['import'] ) {
 			$method = $_POST['how'] ?: 'draft';
-			$this->named_import( $this->post_type, $this->posts( $this->data( false, $_POST['start'], $_POST['num'] ), $method ) );
+			$this->named_import( $this->post_type, $this->posts( $this->data(), $method ) );
 		}//end if
 
 		if( $_GET['purge'] ) {
@@ -106,40 +104,6 @@ class Importer {
 				&mdash; <a id="purge" style="color: red; border-color: red;" href="admin.php?page=djb-data-importer-<?php echo $this->post_type; ?>&purge=true">Purge Data</a>
 			</td>
 		</tr>
-<?php
-		$args = array(
-			'orderby' => 'meta_value_num',
-			'order' => 'DESC',
-			'meta_key' => 'legacy_id',
-			'post_type' => $this->post_type,	
-		);
-
-		$record = new \WP_Query( $args );
-		$record = $record->get_posts();
-		$record = $record[0];
-
-		if( $this->paged_import ) {
-?>
-		<tr valign="top">
-			<th scope="row">ID to start:</th>
-			<td><input name="start" value="<?php echo is_numeric( substr( $record->ID, 1 ) ) ? substr( $record->ID, 1 ) : 0; ?>"/></td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Num to import:</th>
-			<td><input name="num" value="<?php echo $_POST['num'] ?: 100; ?>"/></td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Run:</th>
-			<td>
-				<select name="run">
-					<option value="only" <?php selected( $_POST['run'], 'only' ); ?>>Imma taek this slow. Run only once.</option>
-					<option value="complete" <?php selected( $_POST['run'], 'complete' ); ?>>IMPORT ALL THE THINGS!</option>
-				</select>
-			</td>
-		</tr>
-<?php
-		}
-?>
 		<tr valign="top">
 			<th scope="row">Import As:</th>
 			<td>
@@ -188,6 +152,7 @@ class Importer {
 			'tags_input',
 			'to_ping',
 			'tax_input',
+                        'legacy_id' //legacy_id added to support old News_ID field. We could also do this as a custom field, but I was curious if it would work this way.
 		);
 
 		$posts = array();
